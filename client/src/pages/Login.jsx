@@ -20,10 +20,13 @@ export default function Login() {
     }, [submitting, email])    
 
     return (
-        <div>
-            <p>Welcome To</p>
-            <h2>My Duka</h2>
-            <p>Sign in to manage your inventory and track your business</p>
+        <div className="min-h-screen flex items-center justify-center bg-primaryBg px-4">
+            <div className="w-full max-w-md bg-[#041524] backdrop-blur-md rounded-2xl shadow-2xl p-8 border border-gray-900"></div>
+            <p className="text-gray-200 text-sm"> Welcome To</p>
+            <h1 className="text-2xl font-bold text-white">MY DUKA</h1>
+            <p className="text-gray-300 text-sm">
+            Sign in to manage your inventory and track your business
+          </p>
 
             <form onSubmit={(e) => {
                 e.preventDefault();
