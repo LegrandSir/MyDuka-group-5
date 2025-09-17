@@ -26,7 +26,7 @@ export default function Login() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-primaryBg px-4">
       
-      <div className="w-full max-w-md bg-[#041524] backdrop-blur-md rounded-2xl shadow-2xl p-8 border border-gray-900">
+      <div className="w-full max-w-md bg-[#041524] backdrop-blur-md rounded-2xl shadow-2xl p-8 border border-gray-700">
         <img
           src="./src/assets/my duka logo-01.svg"
           alt="Logo"
@@ -70,9 +70,9 @@ export default function Login() {
           <button
             type="submit"
             disabled={submitting}
-            className="mt-4 w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
+            className="mt-4 w-full bg-blue-00 text-white py-2 rounded hover:bg-blue-00 transition"
           >
-            Submit
+            Login
           </button>
         </form>
       </div>
