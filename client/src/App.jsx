@@ -1,13 +1,12 @@
-import Login from './pages/Login'
+import {  Routes, Route } from "react-router-dom";
+import DashboardPage from "./pages/DashboardPage";
 import './App.css'
 
 function App() {
-  
-
   return (
-    <>
-     <Login/>
-    </>
+    <Routes>
+      <Route path="/" element={<DashboardPage />} />
+    </Routes>
   )
 }
 
