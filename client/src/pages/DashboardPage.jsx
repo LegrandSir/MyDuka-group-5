@@ -176,6 +176,8 @@ const Merchant = () => (
       </ResponsiveContainer>
     </div>
   </div>
+
+  
 );
 
 
