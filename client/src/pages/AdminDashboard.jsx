@@ -1,20 +1,12 @@
 import React, { useState } from 'react';
 import {  Users, ShoppingCart, Package, Plus, Check, X, Store, DollarSign } from 'lucide-react';
+import Card from "../components/Card";
 
 const requests = [
   { id: 1, product: 'Product A', qty: 50, status: 'pending', storeId: 1 },
   { id: 2, product: 'Product B', qty: 100, status: 'approved', storeId: 1 }
 ];
 
-const Card = ({ title, value, icon: Icon }) => (
-  <div className="bg-[#041524] backdrop-blur-md border border-gray-900 rounded-2xl p-4 flex justify-between items-center shadow-2xl">
-    <div>
-      <p className="text-sm text-gray-300">{title}</p>
-      <p className="text-xl font-bold text-white">{value}</p>
-    </div>
-    <Icon className="w-6 h-6 text-gray-400" />
-  </div>
-);
 
 const Admin = ({ user }) => {
   const [reqs, setReqs] = useState(requests.filter(r => r.storeId === user.storeId));
@@ -61,3 +53,5 @@ const Admin = ({ user }) => {
     </div>
   );
 };
+
+export default Admin;

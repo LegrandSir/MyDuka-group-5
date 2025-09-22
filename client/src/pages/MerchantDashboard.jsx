@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import {  Users, ShoppingCart, Package, Plus, Check, X, Store, DollarSign } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 // import Admin from "./AdminDashboard";
-// import Clerk from "./ClerkDashboard";
+import Card from "../components/Card";
 
 const users = [
   { id: 1, name: 'John Merchant', role: 'merchant' },
@@ -15,15 +15,6 @@ const chartData = [
   { name: 'Store 2', sales: 3000, profit: 1398 }
 ];
 
-const Card = ({ title, value, icon: Icon }) => (
-  <div className="bg-[#041524] backdrop-blur-md border border-gray-900 rounded-2xl p-4 flex justify-between items-center shadow-2xl">
-    <div>
-      <p className="text-sm text-gray-300">{title}</p>
-      <p className="text-xl font-bold text-white">{value}</p>
-    </div>
-    <Icon className="w-6 h-6 text-gray-400" />
-  </div>
-);
 
 const Merchant = () => (
   <div className="space-y-6">

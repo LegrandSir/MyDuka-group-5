@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {  Users, ShoppingCart, Package, Plus, Check, X, Store, DollarSign } from 'lucide-react';
+import Card from "../components/Card";
 
 const products = [
   {
@@ -26,15 +27,6 @@ const products = [
   },
 ];
 
-const Card = ({ title, value, icon: Icon }) => (
-  <div className="bg-[#041524] backdrop-blur-md border border-gray-900 rounded-2xl p-4 flex justify-between items-center shadow-2xl">
-    <div>
-      <p className="text-sm text-gray-300">{title}</p>
-      <p className="text-xl font-bold text-white">{value}</p>
-    </div>
-    <Icon className="w-6 h-6 text-gray-400" />
-  </div>
-);
 
 const Clerk = ({ user }) => {
   const [items, setItems] = useState(products.filter(p => p.storeId === user.storeId));
@@ -94,3 +86,5 @@ const Clerk = ({ user }) => {
     </div>
   );
 };
+
+export default Clerk;
