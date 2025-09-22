@@ -1,13 +1,13 @@
 // src/services/api.js
-// const API_URL = "http://127.0.0.1:5000";
+const API_URL = "http://127.0.0.1:5000";
 
  // Flask backend URL 
 
- const API_URL = "http://127.0.0.1:5000/auth/login";
+// const API_URL = "http://127.0.0.1:5000/auth/login";
 
 
 export const login = async (email, password) => {
-  const response = await fetch(`${API_URL}/auth/login`, {
+  const response = await fetch(`${API_URL}/auth/login` , {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password }),
