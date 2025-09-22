@@ -1,5 +1,10 @@
 // src/services/api.js
-const API_URL = "http://127.0.0.1:5000";
+// const API_URL = "http://127.0.0.1:5000";
+
+ // Flask backend URL 
+
+ const API_URL = "http://127.0.0.1:5000/auth/login";
+
 
 export const login = async (email, password) => {
   const response = await fetch(`${API_URL}/auth/login`, {
@@ -10,7 +15,7 @@ export const login = async (email, password) => {
   return response.json();
 };
 
-export const getProtected = async () => {
+export const getDashboardData = async () => {
   const token = localStorage.getItem("token");
   const response = await fetch(`${API_URL}/auth/test-protected`, {
     method: "GET",
