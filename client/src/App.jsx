@@ -1,16 +1,14 @@
-import Login from './pages/Login'
-import {  Routes, Route } from "react-router-dom";
-import DashboardPage from "./pages/DashboardPage";
-import './App.css'
+import React from "react";
+import { BrowserRouter } from "react-router-dom";
+import AppRoutes from "./routes/AppRoutes";
+// import ClerkDashboard from "./pages/ClerkDashboard"
 
 function App() {
   return (
-    <Routes>
-      <Route path="/login" element={<Login />} />
-      <Route path="/dashboard" element={<DashboardPage />} />
-    </Routes>
-     
-  )
+  <BrowserRouter>
+    <AppRoutes />
+  </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
