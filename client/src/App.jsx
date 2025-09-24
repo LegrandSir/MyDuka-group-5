@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter } from "react-router-dom";
 import AppRoutes from "./routes/AppRoutes";
-// import ClerkDashboard from "./pages/ClerkDashboard"
+// import Merchant from "./pages/MerchantDashboard"
 
 function App() {
   return (

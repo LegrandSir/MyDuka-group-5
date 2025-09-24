@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Users, ShoppingCart, Package, Plus, Check, X, Store, DollarSign, BarChart3, LineChart, PieChart, Calendar, Eye, Edit, Trash2, UserPlus, TrendingUp, TrendingDown, AlertTriangle } from 'lucide-react';
+import { Users, Package, Check, X, Store, BarChart3, LineChart, PieChart, Calendar, Eye, Edit, Trash2, UserPlus, TrendingUp, TrendingDown, AlertTriangle } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart as RechartsLineChart, Line, PieChart as RechartsPieChart, Pie, Cell, Area, AreaChart } from 'recharts';
 // import Admin from "./AdminDashboard";
 // import Card from "../components/Card";
@@ -83,7 +83,7 @@ const Card = ({ title, value, icon: Icon, color = 'blue', onClick = null, trend 
   </div>
 );
 
-const Merchant = () => {
+const MerchantDashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
   const [selectedStore, setSelectedStore] = useState(null);
   const [reportPeriod, setReportPeriod] = useState('weekly');
@@ -524,4 +524,4 @@ const Merchant = () => {
   );
 };
 
-export default Merchant;
+export default MerchantDashboard;
