@@ -10,13 +10,14 @@ from routes.auth import bp as auth_bp
 from routes.roles import bp as roles_bp
 from routes.categories import bp as categories_bp
 from routes.products import bp as products_bp
-
+from routes.inventory import bp as inventory_bp
+from routes.supply_requests import bp as supply_requests_bp
 
 def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
 
-    # Enable CORS for your frontend
+    # Enable CORS for frontend
     CORS(app, resources={r"/*": {"origins": "http://127.0.0.1:5173"}})
 
     # Initialize extensions
@@ -29,9 +30,10 @@ def create_app(config_class=Config):
     app.register_blueprint(roles_bp)
     app.register_blueprint(categories_bp)
     app.register_blueprint(products_bp)
-  
+    app.register_blueprint(inventory_bp)
+    app.register_blueprint(supply_requests_bp)
 
-    # Root endpoint for quick testing
+    # Root endpoint for quick API test
     @app.route("/")
     def index():
         return {"ok": True, "msg": "MyDuka API running"}
