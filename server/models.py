@@ -59,3 +59,21 @@ class Invitation(db.Model):
     inviter = db.relationship("User", backref="sent_invitations", foreign_keys=[invited_by])
     role = db.relationship("Role", backref="invitations")
     store = db.relationship("Store", backref="invitations")
+
+class Category(db.Model):
+    __tablename__ = "categories"
+    category_id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(128), unique=True, nullable=False)
+    description = db.Column(db.String(255))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    products = db.relationship("Product", backref="category", cascade="all, delete-orphan")
+
+class Product(db.Model):
+    __tablename__ = "products"
+    product_id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(128), nullable=False)
+    description = db.Column(db.String(255))
+    price = db.Column(db.Float, nullable=False)
+    category_id = db.Column(db.Integer, db.ForeignKey("categories.category_id"), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
