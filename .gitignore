@@ -47,7 +47,7 @@ logs/
 # === IDEs and Editors ===
 .vscode/
 .idea/
-*.sublime-workspace
+*.sublime-workspace 
 *.sublime-project
 
 # === OS Files ===

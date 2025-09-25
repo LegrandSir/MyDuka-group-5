@@ -12,8 +12,13 @@ def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
 
-    CORS(app, resources={r"/*": {"origins": "http://127.0.0.1:5173"}})  
-  
+    # CORS setup
+    CORS(
+        app,
+        resources={r"/*": {"origins": ["http://localhost:5173"]}},
+        supports_credentials=True,
+        allow_headers=["Content-Type", "Authorization"]
+    )
 
     # Extensions
     db.init_app(app)
@@ -30,6 +35,5 @@ def create_app(config_class=Config):
 
     return app
 
-
-if __name__ == "__main__":
+if __name__ == "__main__":   # ✅ fix here
     create_app().run(debug=True)
