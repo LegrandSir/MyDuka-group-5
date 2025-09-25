@@ -3,14 +3,17 @@ from config import Config
 from models import db
 from flask_migrate import Migrate
 from flask_jwt_extended import JWTManager
+from flask_cors import CORS  
 
-# Import blueprints
 from routes.auth import bp as auth_bp
-from routes.roles import bp as roles_bp   # <-- NEW import
+from routes.roles import bp as roles_bp  
 
 def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
+
+    CORS(app, resources={r"/*": {"origins": "http://127.0.0.1:5173"}})  
+  
 
     # Extensions
     db.init_app(app)
@@ -19,7 +22,7 @@ def create_app(config_class=Config):
 
     # Blueprints
     app.register_blueprint(auth_bp)
-    app.register_blueprint(roles_bp)   # <-- NEW blueprint
+    app.register_blueprint(roles_bp)  
 
     @app.route("/")
     def index():
