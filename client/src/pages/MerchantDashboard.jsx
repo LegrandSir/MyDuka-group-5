@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Users, Package, Check, X, Store, BarChart3, LineChart, PieChart, Calendar, Eye, Edit, Trash2, UserPlus, AlertTriangle } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart as RechartsLineChart, Line, PieChart as RechartsPieChart, Pie, Cell, Area, AreaChart } from 'recharts';
-// import Admin from "./AdminDashboard";
 import Card from "../components/Card";
 import TabButton from "../components/TabButton";
 

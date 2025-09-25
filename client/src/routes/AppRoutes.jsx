@@ -7,7 +7,6 @@ import Logo from "../assets/my duka logo-01.svg";
 import { useAuth } from "../context/AuthContext";
 
 
-const Login = () => <div className="text-white">Login Page</div>;
 
 const AppRoutes = () => {
   const { user } = useAuth();
@@ -61,7 +60,7 @@ const AppRoutes = () => {
 </div>
 
     <Routes>
-       <Route path="/" element={<Login />} /> 
+       {/* <Route path="/" element={<Login />} />  */}
        <Route path="/clerk" element={user?.role === "clerk" ? <ClerkDashboard user={user} /> : <Navigate to="/" />} />
        <Route path="/admin" element={user?.role === "admin" ?<AdminDashboard user={user} /> : <Navigate to="/" />} />
        <Route path="/merchant" element={user?.role === "merchant" ?<MerchantDashboard />  : <Navigate to="/" /> }/>
