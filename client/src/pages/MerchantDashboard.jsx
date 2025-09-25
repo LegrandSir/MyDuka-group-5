@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Users, Package, Check, X, Store, BarChart3, LineChart, PieChart, Calendar, Eye, Edit, Trash2, UserPlus, TrendingUp, TrendingDown, AlertTriangle } from 'lucide-react';
+import { Users, Package, Check, X, Store, BarChart3, LineChart, PieChart, Calendar, Eye, Edit, Trash2, UserPlus, AlertTriangle } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart as RechartsLineChart, Line, PieChart as RechartsPieChart, Pie, Cell, Area, AreaChart } from 'recharts';
 // import Admin from "./AdminDashboard";
-// import Card from "../components/Card";
+import Card from "../components/Card";
+import TabButton from "../components/TabButton";
 
 const initialStores = [
   { id: 1, name: 'Downtown Store', location: 'Nairobi CBD', status: 'active', adminCount: 2 },
@@ -62,26 +63,7 @@ const paymentStatusData = [
 
 const COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6'];
 
-const Card = ({ title, value, icon: Icon, color = 'blue', onClick = null, trend = null }) => (
-  <div 
-    className={`bg-gradient-to-br from-${color}-900/20 to-${color}-800/10 backdrop-blur-sm border border-${color}-800/30 rounded-xl p-4 shadow-lg ${onClick ? 'cursor-pointer hover:bg-gray-800/30' : ''}`}
-    onClick={onClick}
-  >
-    <div className="flex items-center justify-between">
-      <div>
-        <p className="text-gray-400 text-sm">{title}</p>
-        <p className="text-2xl font-bold text-white">{value}</p>
-        {trend && (
-          <div className={`flex items-center gap-1 mt-1 ${trend > 0 ? 'text-green-400' : 'text-red-400'}`}>
-            {trend > 0 ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
-            <span className="text-xs">{Math.abs(trend)}%</span>
-          </div>
-        )}
-      </div>
-      <Icon className={`w-8 h-8 text-${color}-400`} />
-    </div>
-  </div>
-);
+
 
 const MerchantDashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
@@ -143,20 +125,6 @@ const MerchantDashboard = () => {
   const totalStaff = admins.length;
   const paidProducts = products.filter(p => p.paymentStatus === 'paid').length;
   const unpaidProducts = products.filter(p => p.paymentStatus === 'unpaid').length;
-
-  const TabButton = ({ id, label, isActive, onClick, icon: Icon }) => (
-    <button
-      onClick={() => onClick(id)}
-      className={`px-4 py-2 rounded-lg transition-all flex items-center gap-2 ${
-        isActive 
-          ? 'bg-blue-600 text-white shadow-lg' 
-          : 'text-gray-400 hover:text-white hover:bg-gray-800'
-      }`}
-    >
-      <Icon className="w-4 h-4" />
-      {label}
-    </button>
-  );
 
   const renderChart = () => {
     const data = getChartData();

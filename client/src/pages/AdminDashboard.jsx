@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import {  Users, ShoppingCart, Package, Plus, Check, X, Store, DollarSign, FileText, Edit, Trash2, UserPlus, Eye, Calendar, TrendingUp, AlertTriangle } from 'lucide-react';
 import Card from "../components/Card";
+import TabButton from "../components/TabButton";
 
 const initialRequests = [
   { id: 1, product: 'Rice 1kg', qty: 50, status: 'pending', storeId: 1, clerkName: 'John Doe', date: '2024-01-15', reason: 'Low stock alert' },
@@ -20,7 +21,7 @@ const initialClerks = [
   { id: 3, name: 'Bob Wilson', email: 'bob@store.com', status: 'inactive', storeId: 1, lastActive: '2024-01-10', entriesCount: 28 }
 ];
 
-const initialPayments = [
+const initialPayments= [
   { id: 1, supplier: 'ABC Suppliers', amount: 45000, dueDate: '2024-01-20', status: 'unpaid', products: ['Rice 1kg', 'Wheat Flour'] },
   { id: 2, supplier: 'XYZ Foods', amount: 22000, dueDate: '2024-01-18', status: 'paid', products: ['Cooking Oil'], paidDate: '2024-01-16' },
   { id: 3, supplier: 'Sweet Co.', amount: 15000, dueDate: '2024-01-22', status: 'overdue', products: ['Sugar 1kg', 'Salt'] }
@@ -34,7 +35,7 @@ const initialClerkReports = [
 ];
 
 
-const AdminDashboard = () => {
+const  AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('requests');
   const [reqs, setReqs] = useState(initialRequests);
 //   const [reqs, setReqs] = useState(initialRequests.filter(r => r.storeId === user.storeId));
@@ -92,20 +93,6 @@ const AdminDashboard = () => {
   const unpaidPayments = payments.filter(p => p.status === 'unpaid' || p.status === 'overdue').length;
   const activeClerks = clerks.filter(c => c.status === 'active').length;
   const totalRevenue = "Ksh 156,780";
-
-  const TabButton = ({ id, label, isActive, onClick, icon: Icon }) => (
-    <button
-      onClick={() => onClick(id)}
-      className={`px-4 py-2 rounded-lg transition-all flex items-center gap-2 ${
-        isActive 
-          ? 'bg-blue-600 text-white shadow-lg' 
-          : 'text-gray-400 hover:text-white hover:bg-gray-800'
-      }`}
-    >
-      <Icon className="w-4 h-4" />
-      {label}
-    </button>
-  );
 
   return (
     <div className="bg-[#041524] backdrop-blur-md border border-gray-900 rounded-2xl p-6 shadow-2xl">

@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import {  Package, ShoppingCart, AlertTriangle, Edit, Save, Plus, Check, X, Clock, TrendingUp, TrendingDown, DollarSign } from 'lucide-react';
+import {  Package, ShoppingCart, AlertTriangle, Edit, Save, Plus, Warehouse, Mail, Clock, TrendingUp, TrendingDown, Clipboard } from 'lucide-react';
 import Card from "../components/Card";
+import TabButton from "../components/TabButton";
 // import { user } from "../utils/constants";
 
 
@@ -79,19 +80,6 @@ const ClerkDashboard = () => {
     setNewRequest({ product: '', quantity: '', reason: '' });
   };
 
-  const TabButton = ({ id, label, isActive, onClick }) => (
-    <button
-      onClick={() => onClick(id)}
-      className={`px-4 py-2 rounded-lg transition-all ${
-        isActive 
-          ? 'bg-blue-600 text-white shadow-lg' 
-          : 'text-gray-400 hover:text-white hover:bg-gray-800'
-      }`}
-    >
-      {label}
-    </button>
-  );
-
   return (
     <div className="bg-[#041524] backdrop-blur-md border border-gray-900 rounded-2xl p-6 shadow-2xl">
     {/* Header */}
@@ -109,10 +97,10 @@ const ClerkDashboard = () => {
       </div>
 
     <div className="flex flex-wrap gap-2 bg-gray-800/50 p-2 rounded-xl backdrop-blur-sm">
-        <TabButton id="overview" label="Inventory Overview" isActive={activeTab === 'overview'} onClick={setActiveTab} />
-        <TabButton id="receive" label="Receive Items" isActive={activeTab === 'receive'} onClick={setActiveTab} />
-        <TabButton id="spoilage" label="Record Spoilage" isActive={activeTab === 'spoilage'} onClick={setActiveTab} />
-        <TabButton id="requests" label="Submit Requests" isActive={activeTab === 'requests'} onClick={setActiveTab} />
+        <TabButton id="overview" label="Inventory Overview" isActive={activeTab === 'overview'} onClick={setActiveTab}  icon={Clipboard} />
+        <TabButton id="receive" label="Receive Items" isActive={activeTab === 'receive'} onClick={setActiveTab} icon={Warehouse} />
+        <TabButton id="spoilage" label="Record Spoilage" isActive={activeTab === 'spoilage'} onClick={setActiveTab} icon={AlertTriangle} />
+        <TabButton id="requests" label="Submit Requests" isActive={activeTab === 'requests'} onClick={setActiveTab} icon={Mail} />
     </div>
 
      {/* Tab Content */}
