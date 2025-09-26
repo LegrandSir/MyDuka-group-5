@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Routes, Route, Navigate  } from "react-router-dom";
 import ClerkDashboard from "../pages/ClerkDashboard";
 import AdminDashboard from "../pages/AdminDashboard";
+import Login from "../pages/Login";
 import MerchantDashboard from "../pages/MerchantDashboard";
 import Logo from "../assets/my duka logo-01.svg";
 import { useAuth } from "../context/AuthContext";
@@ -60,7 +61,7 @@ const AppRoutes = () => {
 </div>
 
     <Routes>
-       {/* <Route path="/" element={<Login />} />  */}
+       <Route path="/" element={<Login />} /> 
        <Route path="/clerk" element={user?.role === "clerk" ? <ClerkDashboard user={user} /> : <Navigate to="/" />} />
        <Route path="/admin" element={user?.role === "admin" ?<AdminDashboard user={user} /> : <Navigate to="/" />} />
        <Route path="/merchant" element={user?.role === "merchant" ?<MerchantDashboard />  : <Navigate to="/" /> }/>

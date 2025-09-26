@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Users, Package, Check, X, Store, BarChart3, LineChart, ListTree, Plus, Calendar, Save, Edit, Trash2, UserPlus, AlertTriangle } from 'lucide-react';
+import { Users, Package, Check, X, Store, BarChart3, LineChart, ListTree, Plus, Calendar, Save, Edit, Trash2, UserPlus, AlertTriangle, Tags } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart as RechartsLineChart, Line, PieChart as RechartsPieChart, Pie, Cell, Area, AreaChart } from 'recharts';
 import Card from "../components/Card";
 import TabButton from "../components/TabButton";
+import apiService from "../service/api";
 
 const initialStores = [
   { id: 1, name: 'Downtown Store', location: 'Nairobi CBD', status: 'active', adminCount: 2 },
@@ -79,13 +80,13 @@ const MerchantDashboard = () => {
   const [chartType, setChartType] = useState('bar');
   const [stores, setStores] = useState(initialStores);
   const [admins, setAdmins] = useState(initialAdmins);
-  const [products, setProducts] = useState(initialProducts);
-  const [categories, setCategories] = useState(initialCategories);
+  const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [users] = useState(initialAdmins); 
 
   const [newAdmin, setNewAdmin] = useState({ name: '', email: '', storeId: '', password: '' });
   const [newStore, setNewStore] = useState({ name: '', location: '', address: '', phone: '', manager: '' });
-  const [newProduct, setNewProduct] = useState({ name: '', storeId: '', stock: '', price: '', category: '', sku: '', supplier: '', reorderLevel: '' });
+  const [newProduct, setNewProduct] = useState({ name: '', price: '', category_id: '' });
   const [newCategory, setNewCategory] = useState({ name: '', description: '' });
   
   const [showAddAdmin, setShowAddAdmin] = useState(false);
@@ -105,6 +106,23 @@ const MerchantDashboard = () => {
       default: return weeklyData;
     }
   };
+
+  // Fetch backend data
+  React.useEffect(() => {
+    const load = async () => {
+      try {
+        const [p, c] = await Promise.all([
+          apiService.getProducts(),
+          apiService.getCategories(),
+        ]);
+        setProducts(Array.isArray(p) ? p : []);
+        setCategories(Array.isArray(c) ? c : []);
+      } catch (e) {
+        console.error("Failed to load merchant data", e);
+      }
+    };
+    load();
+  }, []);
 
   // Store Management Functions
   const addStore = () => {
@@ -147,50 +165,50 @@ const MerchantDashboard = () => {
     ));
   };
 
-  // Product Management Functions
-  const addProduct = () => {
-    if (!newProduct.name || !newProduct.storeId || !newProduct.stock || !newProduct.price) return;
-    
-    const store = stores.find(s => s.id === parseInt(newProduct.storeId));
-    const product = {
-      id: Date.now(),
-      name: newProduct.name,
-      storeId: parseInt(newProduct.storeId),
-      storeName: store?.name || 'Unknown Store',
-      stock: parseInt(newProduct.stock),
-      price: parseFloat(newProduct.price),
-      category: newProduct.category,
-      sku: newProduct.sku,
-      supplier: newProduct.supplier,
-      reorderLevel: parseInt(newProduct.reorderLevel),
-      paymentStatus: 'unpaid'
-    };
-    
-    setProducts([...products, product]);
-    setNewProduct({ name: '', storeId: '', stock: '', price: '', category: '', sku: '', supplier: '', reorderLevel: '' });
-    setShowAddProduct(false);
-  };
-
-  const updateProduct = () => {
-    if (!editingProduct) return;
-    
-    const store = stores.find(s => s.id === editingProduct.storeId);
-    const updatedProduct = { ...editingProduct, storeName: store?.name || 'Unknown Store' };
-    
-    setProducts(products.map(p => p.id === editingProduct.id ? updatedProduct : p));
-    setEditingProduct(null);
-  };
-
-  const deleteProduct = (id) => {
-    if (window.confirm('Are you sure you want to delete this product?')) {
-      setProducts(products.filter(p => p.id !== id));
+  // Product Management Functions (backend)
+  const addProduct = async () => {
+    if (!newProduct.name || !newProduct.price || !newProduct.category_id) return;
+    try {
+      const created = await apiService.createProduct({
+        name: newProduct.name,
+        price: parseFloat(newProduct.price),
+        category_id: parseInt(newProduct.category_id),
+      });
+      setProducts(prev => [...prev, created]);
+      setNewProduct({ name: '', price: '', category_id: '' });
+      setShowAddProduct(false);
+    } catch (e) {
+      console.error("Failed to create product", e);
+      alert("Error creating product");
     }
   };
 
-  const togglePaymentStatus = (id) => {
-    setProducts(products.map(p => 
-      p.id === id ? { ...p, paymentStatus: p.paymentStatus === 'paid' ? 'unpaid' : 'paid' } : p
-    ));
+  const updateProduct = async () => {
+    if (!editingProduct) return;
+    try {
+      const payload = {
+        name: editingProduct.name,
+        price: editingProduct.price,
+        category_id: editingProduct.category_id,
+      };
+      const updated = await apiService.updateProduct(editingProduct.id, payload);
+      setProducts(prev => prev.map(p => (p.id === updated.id ? updated : p)));
+      setEditingProduct(null);
+    } catch (e) {
+      console.error("Failed to update product", e);
+      alert("Error updating product");
+    }
+  };
+
+  const deleteProduct = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this product?')) return;
+    try {
+      await apiService.deleteProduct(id);
+      setProducts(prev => prev.filter(p => p.id !== id));
+    } catch (e) {
+      console.error("Failed to delete product", e);
+      alert("Error deleting product");
+    }
   };
 
 
@@ -259,8 +277,8 @@ const MerchantDashboard = () => {
   const totalStores = stores.length;
   const totalProducts = products.length;
   const totalStaff = admins.length;
-  const paidProducts = products.filter(p => p.paymentStatus === 'paid').length;
-  const unpaidProducts = products.filter(p => p.paymentStatus === 'unpaid').length;
+  const paidProducts = 0; // payments not tracked in backend products
+  const unpaidProducts = 0;
 
   const renderChart = () => {
     const data = getChartData();
@@ -347,7 +365,7 @@ const MerchantDashboard = () => {
           <TabButton id="overview" label="Overview & Reports" isActive={activeTab === 'overview'} onClick={setActiveTab} icon={BarChart3} />
           <TabButton id="stores" label="Store Performance" isActive={activeTab === 'stores'} onClick={setActiveTab} icon={Store} />
           <TabButton id="products" label="Product Tracking" isActive={activeTab === 'products'} onClick={setActiveTab} icon={Package} />
-          <TabButton id="categories" label="Display Categories" isActive={activeTab === 'categoreies'} onClick={setActiveTab} icon={ListTree} />
+          <TabButton id="categories" label="Display Categories" isActive={activeTab === 'categories'} onClick={setActiveTab} icon={ListTree} />
           <TabButton id="admins" label="Manage Admins" isActive={activeTab === 'admins'} onClick={setActiveTab} icon={Users} />
         </div>
 
@@ -671,23 +689,6 @@ const MerchantDashboard = () => {
                       onChange={(e) => setNewProduct({...newProduct, name: e.target.value})}
                       className="px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white"
                     />
-                    <select
-                      value={newProduct.storeId}
-                      onChange={(e) => setNewProduct({...newProduct, storeId: e.target.value})}
-                      className="px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white"
-                    >
-                      <option value="">Select Store</option>
-                      {stores.map(store => (
-                        <option key={store.id} value={store.id}>{store.name}</option>
-                      ))}
-                    </select>
-                    <input
-                      type="number"
-                      placeholder="Stock Quantity"
-                      value={newProduct.stock}
-                      onChange={(e) => setNewProduct({...newProduct, stock: e.target.value})}
-                      className="px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white"
-                    />
                     <input
                       type="number"
                       step="0.01"
@@ -699,36 +700,15 @@ const MerchantDashboard = () => {
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 mb-3">
                     <select
-                      value={newProduct.category}
-                      onChange={(e) => setNewProduct({...newProduct, category: e.target.value})}
+                      value={newProduct.category_id}
+                      onChange={(e) => setNewProduct({...newProduct, category_id: e.target.value})}
                       className="px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white"
                     >
                       <option value="">Select Category</option>
                       {categories.map(category => (
-                        <option key={category.id} value={category.name}>{category.name}</option>
+                        <option key={category.id} value={category.id}>{category.name}</option>
                       ))}
                     </select>
-                    <input
-                      type="text"
-                      placeholder="SKU"
-                      value={newProduct.sku}
-                      onChange={(e) => setNewProduct({...newProduct, sku: e.target.value})}
-                      className="px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white"
-                    />
-                    <input
-                      type="text"
-                      placeholder="Supplier"
-                      value={newProduct.supplier}
-                      onChange={(e) => setNewProduct({...newProduct, supplier: e.target.value})}
-                      className="px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white"
-                    />
-                    <input
-                      type="number"
-                      placeholder="Reorder Level"
-                      value={newProduct.reorderLevel}
-                      onChange={(e) => setNewProduct({...newProduct, reorderLevel: e.target.value})}
-                      className="px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white"
-                    />
                   </div>
                   <div className="flex gap-2">
                     <button
@@ -759,23 +739,6 @@ const MerchantDashboard = () => {
                       onChange={(e) => setEditingProduct({...editingProduct, name: e.target.value})}
                       className="px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white"
                     />
-                    <select
-                      value={editingProduct.storeId}
-                      onChange={(e) => setEditingProduct({...editingProduct, storeId: parseInt(e.target.value)})}
-                      className="px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white"
-                    >
-                      <option value="">Select Store</option>
-                      {stores.map(store => (
-                        <option key={store.id} value={store.id}>{store.name}</option>
-                      ))}
-                    </select>
-                    <input
-                      type="number"
-                      placeholder="Stock Quantity"
-                      value={editingProduct.stock}
-                      onChange={(e) => setEditingProduct({...editingProduct, stock: parseInt(e.target.value)})}
-                      className="px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white"
-                    />
                     <input
                       type="number"
                       step="0.01"
@@ -787,36 +750,15 @@ const MerchantDashboard = () => {
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 mb-3">
                     <select
-                      value={editingProduct.category}
-                      onChange={(e) => setEditingProduct({...editingProduct, category: e.target.value})}
+                      value={editingProduct.category_id}
+                      onChange={(e) => setEditingProduct({...editingProduct, category_id: parseInt(e.target.value)})}
                       className="px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white"
                     >
                       <option value="">Select Category</option>
                       {categories.map(category => (
-                        <option key={category.id} value={category.name}>{category.name}</option>
+                        <option key={category.id} value={category.id}>{category.name}</option>
                       ))}
                     </select>
-                    <input
-                      type="text"
-                      placeholder="SKU"
-                      value={editingProduct.sku}
-                      onChange={(e) => setEditingProduct({...editingProduct, sku: e.target.value})}
-                      className="px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white"
-                    />
-                    <input
-                      type="text"
-                      placeholder="Supplier"
-                      value={editingProduct.supplier}
-                      onChange={(e) => setEditingProduct({...editingProduct, supplier: e.target.value})}
-                      className="px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white"
-                    />
-                    <input
-                      type="number"
-                      placeholder="Reorder Level"
-                      value={editingProduct.reorderLevel}
-                      onChange={(e) => setEditingProduct({...editingProduct, reorderLevel: parseInt(e.target.value)})}
-                      className="px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white"
-                    />
                   </div>
                   <div className="flex gap-2">
                     <button
@@ -1030,7 +972,7 @@ const MerchantDashboard = () => {
                         <td className="p-3">{category.description}</td>
                         <td className="p-3">
                           <span className="px-2 py-1 bg-blue-700 text-blue-200 rounded-full text-xs">
-                            {products.filter(p => p.category === category.name).length}
+                            {Array.isArray(category.products) ? category.products.length : 0}
                           </span>
                         </td>
                         <td className="p-3">
