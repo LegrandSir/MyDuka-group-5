@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {  Users, ShoppingCart, Package, Plus, Check, X, Store, DollarSign, FileText, Edit, Trash2, UserPlus, ListTree, Calendar, TrendingUp, AlertTriangle } from 'lucide-react';
+import {  Users, ShoppingCart, Package, Plus, DollarSign, FileText, Edit, Trash2, UserPlus, ListTree, Calendar, TrendingUp, AlertTriangle } from 'lucide-react';
 import Card from "../components/Card";
 import TabButton from "../components/TabButton";
 
