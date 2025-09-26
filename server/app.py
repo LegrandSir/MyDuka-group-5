@@ -4,8 +4,8 @@ from models import db
 from flask_migrate import Migrate
 from flask_jwt_extended import JWTManager
 from flask_cors import CORS  
+from flask_cors import CORS  
 
-# Import blueprints
 from routes.auth import bp as auth_bp
 from routes.roles import bp as roles_bp
 from routes.categories import bp as categories_bp
@@ -17,10 +17,10 @@ def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
 
-    # Enable CORS for frontend
-    CORS(app, resources={r"/*": {"origins": "http://127.0.0.1:5173"}})
+    CORS(app, resources={r"/*": {"origins": "http://127.0.0.1:5173"}})  
+  
 
-    # Initialize extensions
+    # Extensions
     db.init_app(app)
     Migrate(app, db)
     JWTManager(app)
