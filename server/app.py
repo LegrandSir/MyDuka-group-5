@@ -18,7 +18,6 @@ def create_app(config_class=Config):
     app.config.from_object(config_class)
 
     CORS(app, resources={r"/*": {"origins": "http://127.0.0.1:5173"}})  
-  
 
     # Extensions
     db.init_app(app)
