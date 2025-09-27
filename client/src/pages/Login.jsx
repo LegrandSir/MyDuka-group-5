@@ -47,7 +47,7 @@ export default function Login() {
           MY DUKA
         </h1>
         <p className="text-gray-300 text-sm text-center mb-6">
-          Sign in to manage your inventory and track your business
+          Sign in to manage your inventory and track your business.
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-4">

@@ -20,8 +20,7 @@ def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
 
-    # Allow frontend (React/Vue etc.) to connect
-    CORS(app, resources={r"/*": {"origins": "http://127.0.0.1:5173"}})
+    CORS(app, resources={r"/*": {"origins": "http://127.0.0.1:5173"}})  
 
     # Extensions
     db.init_app(app)
