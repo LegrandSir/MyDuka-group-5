@@ -1,13 +1,28 @@
-import {  Routes, Route } from "react-router-dom";
-import DashboardPage from "./pages/DashboardPage";
-import './App.css'
+// src/App.jsx
+import { BrowserRouter as Router, Routes, Route, BrowserRouter } from "react-router-dom";
+import Login from "./pages/Login";
+import RoleBasedDashboard from "./components/RoleBasedDashboard";
+import PrivateRoute from "./components/PrivateRoute";
 
-function App() {
+export default function App() {
   return (
-    <Routes>
-      <Route path="/" element={<DashboardPage />} />
-    </Routes>
-  )
-}
+    <Router>
+      <Routes>
+        <Route path="/login" element={<Login />} />
 
-export default App
+        <Route
+      path="/dashboard"
+      element={
+        <PrivateRoute>
+          <RoleBasedDashboard />
+        </PrivateRoute>
+      }
+    />
+        
+
+      
+        <Route path="*" element={<Login />} />
+      </Routes>
+    </Router>
+  );
+}

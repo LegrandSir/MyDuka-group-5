@@ -1,31 +1,48 @@
-from flask import Flask, jsonify
+from flask import Flask
 from config import Config
-from models import db, Product
-from flask_migrate import Migrate  
+from models import db
+from flask_migrate import Migrate
+from flask_jwt_extended import JWTManager
+from flask_cors import CORS  
 
-app = Flask(__name__)
-app.config.from_object(Config)
+# Import blueprints
+from routes.auth import bp as auth_bp
+from routes.roles import bp as roles_bp
+from routes.categories import bp as categories_bp
+from routes.products import bp as products_bp
+from routes.inventory import bp as inventory_bp
+from routes.supply_requests import bp as supply_requests_bp
+from routes.stores import bp as stores_bp           
+from routes.payments import bp as payments_bp       
+from routes.password_reset import bp as reset_bp    
 
-# Initialize database and migrations
-db.init_app(app)
-migrate = Migrate(app, db)  
+def create_app(config_class=Config):
+    app = Flask(__name__)
+    app.config.from_object(config_class)
 
-@app.route("/")
-def index():
-    return jsonify({"message": "My Duka API is running!"}), 200
+    CORS(app, resources={r"/*": {"origins": "http://127.0.0.1:5173"}})  
 
-@app.route("/products")
-def products():
-    products = Product.query.all()
-    if products:
-        data = [p.to_dict() for p in products]
-    else:
-        data = [
-            {"id": 1, "name": "iPhone 12", "price": 55000},
-            {"id": 2, "name": "iPhone 13", "price": 80000},
-            {"id": 3, "name": "iPhone 14", "price": 120000},
-        ]
-    return jsonify(data), 200
+    # Extensions
+    db.init_app(app)
+    Migrate(app, db)
+    JWTManager(app)
+
+    # Register blueprints
+    app.register_blueprint(auth_bp)
+    app.register_blueprint(roles_bp)
+    app.register_blueprint(categories_bp)
+    app.register_blueprint(products_bp)
+    app.register_blueprint(inventory_bp)
+    app.register_blueprint(supply_requests_bp)
+    app.register_blueprint(stores_bp)        #  Register Stores
+    app.register_blueprint(payments_bp)      #  Register Payments
+    app.register_blueprint(reset_bp)         #  Register Password Reset
+
+    @app.route("/")
+    def index():
+        return {"ok": True, "msg": "MyDuka API running"}
+
+    return app
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    create_app().run(debug=True)
