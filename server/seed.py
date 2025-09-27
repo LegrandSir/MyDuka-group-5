@@ -1,5 +1,7 @@
 from app import create_app
-from models import db, Category, Product, Inventory, Store, User, Role, SupplyRequest
+from models import db, Category, Product, Inventory, Store, User, Role, SupplyRequest, Payment, PasswordResetToken
+from datetime import datetime
+
 
 app = create_app()
 app.app_context().push()
@@ -11,24 +13,40 @@ db.create_all()
 # -------------------------
 # Roles
 # -------------------------
-admin_role = Role(name="Admin", description="Administrator")
-merchant_role = Role(name="Merchant", description="Merchant")
-clerk_role = Role(name="Clerk", description="Store Clerk")
+admin_role = Role(name="admin", description="Administrator")
+merchant_role = Role(name="merchant", description="Merchant")
+clerk_role = Role(name="clerk", description="Clerk")
+
 db.session.add_all([admin_role, merchant_role, clerk_role])
 db.session.commit()
+
 
 # -------------------------
 # Users
 # -------------------------
-admin_user = User(name="Admin User", email="admin@test.com", role_id=admin_role.role_id)
-admin_user.set_password("password123")
+admin_user = User(name="Admin User", email="admin@gmail.com", role_id=admin_role.role_id)
+admin_user.set_password("StrongPass123!")
 db.session.add(admin_user)
 
-merchant_user = User(name="Merchant One", email="merchant@test.com", role_id=merchant_role.role_id)
-merchant_user.set_password("password123")
+merchant_user = User(name="Merchant One", email="merchant@gmail.com", role_id=merchant_role.role_id)
+merchant_user.set_password("StrongPass123!")
 db.session.add(merchant_user)
 db.session.commit()
 
+merchant_user = User(name="Faith Wangari", email="faithwangarimerchant@gmail.com", role_id=merchant_role.role_id)
+merchant_user.set_password("StrongPass123!")
+db.session.add(merchant_user)
+db.session.commit()
+
+merchant_user = User(name="Paul Wafula", email="paulwafulamerchant@gmail.com", role_id=merchant_role.role_id)
+merchant_user.set_password("StrongPass123!")
+db.session.add(merchant_user)
+db.session.commit()
+
+clerk_user = User(name="Ellis Lunayo", email="ellislunayoclerk@gmail.com", role_id=clerk_role.role_id)
+clerk_user.set_password("StrongPass123!")
+db.session.add(clerk_user)
+db.session.commit()
 # -------------------------
 # Stores
 # -------------------------
@@ -78,6 +96,27 @@ supply_requests = [
     SupplyRequest(product_id=products[1].product_id, store_id=store2.id, quantity=20, requested_by=merchant_user.user_id, status="approved"),
 ]
 db.session.add_all(supply_requests)
+db.session.commit()
+
+# -------------------------
+# Payments 
+# -------------------------
+payments = [
+    Payment(user_id=merchant_user.user_id, amount=250.00, status="completed", method="M-Pesa"),
+    Payment(user_id=merchant_user.user_id, amount=100.00, status="pending", method="Card"),
+]
+db.session.add_all(payments)
+db.session.commit()
+
+# -------------------------
+# Password Reset Tokens 
+# -------------------------
+reset_token = PasswordResetToken(
+    user_id=admin_user.user_id,
+    token="dummy-reset-token-123",
+    expires_at=datetime.utcnow(),
+)
+db.session.add(reset_token)
 db.session.commit()
 
 print("✅ Database seeded successfully!")
