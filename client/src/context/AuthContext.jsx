@@ -18,7 +18,6 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem("token");
   };
 
-
   useEffect(() => {
   if (token && !user) {
     try {
@@ -39,6 +38,7 @@ export const AuthProvider = ({ children }) => {
     }
   }
 }, [token]);
+
 
   return (
     <AuthContext.Provider value={{ user, token, login, logout }}>
