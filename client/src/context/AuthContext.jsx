@@ -22,8 +22,6 @@ export const AuthProvider = ({ children }) => {
   if (token && !user) {
     try {
       const decoded = JSON.parse(atob(token.split(".")[1]));
-      console.log("Decoded token:", decoded);
-
 
       const normalizedUser = {
         id: decoded.sub?.user_id,
