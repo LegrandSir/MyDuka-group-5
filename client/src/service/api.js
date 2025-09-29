@@ -106,7 +106,7 @@ class ApiService {
   }
   
   async getProducts() {
-    return this.request('/products');
+    return this.request('/products/');
   }
 
   async createProduct(productData) {
