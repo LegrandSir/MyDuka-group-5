@@ -4,14 +4,17 @@ from models import db
 from flask_migrate import Migrate
 from flask_jwt_extended import JWTManager
 from flask_cors import CORS  
-from flask_cors import CORS  
 
+# Import blueprints
 from routes.auth import bp as auth_bp
 from routes.roles import bp as roles_bp
 from routes.categories import bp as categories_bp
 from routes.products import bp as products_bp
 from routes.inventory import bp as inventory_bp
 from routes.supply_requests import bp as supply_requests_bp
+from routes.stores import bp as stores_bp           
+from routes.payments import bp as payments_bp       
+from routes.password_reset import bp as reset_bp    
 
 def create_app(config_class=Config):
     app = Flask(__name__)
@@ -31,8 +34,10 @@ def create_app(config_class=Config):
     app.register_blueprint(products_bp)
     app.register_blueprint(inventory_bp)
     app.register_blueprint(supply_requests_bp)
+    app.register_blueprint(stores_bp)        #  Register Stores
+    app.register_blueprint(payments_bp)      #  Register Payments
+    app.register_blueprint(reset_bp)         #  Register Password Reset
 
-    # Root endpoint for quick API test
     @app.route("/")
     def index():
         return {"ok": True, "msg": "MyDuka API running"}
@@ -40,6 +45,4 @@ def create_app(config_class=Config):
     return app
 
 if __name__ == "__main__":
-    # Run Flask in debug mode for development
     create_app().run(debug=True)
-

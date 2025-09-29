@@ -1,7 +1,8 @@
 from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
+from datetime import datetime, timedelta
 from werkzeug.security import generate_password_hash, check_password_hash
 import enum
+import uuid
 
 db = SQLAlchemy()
 
@@ -31,12 +32,16 @@ class Role(db.Model):
 class Store(db.Model):
     __tablename__ = "stores"
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(128), nullable=False)
+    name = db.Column(db.String(128), nullable=False, unique=True)
+    location = db.Column(db.String(255), nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     users = db.relationship("User", backref="store", cascade="all, delete-orphan")
     invitations = db.relationship("Invitation", backref="store", cascade="all, delete-orphan")
     supply_requests = db.relationship("SupplyRequest", backref="store", cascade="all, delete-orphan")
+
+    def __repr__(self):
+        return f"<Store {self.name}>"
 
 # -------------------------
 # Users
@@ -54,6 +59,8 @@ class User(db.Model):
 
     sent_invitations = db.relationship("Invitation", backref="inviter", foreign_keys='Invitation.invited_by')
     supply_requests = db.relationship("SupplyRequest", backref="user", cascade="all, delete-orphan")
+    payments = db.relationship("Payment", backref="user", cascade="all, delete-orphan")
+    reset_tokens = db.relationship("PasswordResetToken", backref="user", cascade="all, delete-orphan")
 
     def set_password(self, raw_password: str):
         self.password = generate_password_hash(raw_password)
@@ -75,8 +82,9 @@ class Invitation(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     used = db.Column(db.Boolean, default=False)
 
+# -------------------------
 # Categories & Products
-
+# -------------------------
 class Category(db.Model):
     __tablename__ = "categories"
     category_id = db.Column(db.Integer, primary_key=True)
@@ -98,9 +106,9 @@ class Product(db.Model):
     inventory = db.relationship("Inventory", backref="product", cascade="all, delete-orphan")
     supply_requests = db.relationship("SupplyRequest", backref="product", cascade="all, delete-orphan")
 
-
+# -------------------------
 # Inventory
-
+# -------------------------
 class Inventory(db.Model):
     __tablename__ = "inventory"
     inventory_id = db.Column(db.Integer, primary_key=True)
@@ -108,9 +116,9 @@ class Inventory(db.Model):
     quantity = db.Column(db.Integer, default=0)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-
+# -------------------------
 # Supply Requests
-
+# -------------------------
 class SupplyRequest(db.Model):
     __tablename__ = "supply_requests"
     request_id = db.Column(db.Integer, primary_key=True)
@@ -120,3 +128,35 @@ class SupplyRequest(db.Model):
     requested_by = db.Column(db.Integer, db.ForeignKey("users.user_id"), nullable=False)
     status = db.Column(db.String(50), default="pending")  # pending, approved, rejected
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+# -------------------------
+# Payments
+# -------------------------
+class Payment(db.Model):
+    __tablename__ = "payments"
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"), nullable=False)
+    amount = db.Column(db.Float, nullable=False)
+    method = db.Column(db.String(50), nullable=False)  # Mpesa, Card, Cash, etc.
+    status = db.Column(db.String(50), default="pending")
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def __repr__(self):
+        return f"<Payment {self.id} - {self.amount}>"
+
+# -------------------------
+# Password Reset Tokens
+# -------------------------
+class PasswordResetToken(db.Model):
+    __tablename__ = "password_reset_tokens"
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"), nullable=False)
+    token = db.Column(db.String(255), unique=True, nullable=False, default=lambda: str(uuid.uuid4()))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    expires_at = db.Column(db.DateTime, nullable=False)
+
+    def is_expired(self):
+        return datetime.utcnow() > self.expires_at
+
+    def __repr__(self):
+        return f"<PasswordResetToken {self.token}>"
