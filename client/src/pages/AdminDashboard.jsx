@@ -12,6 +12,7 @@ import {
 import Card from "../components/Card";
 import TabButton from "../components/TabButton";
 import apiService from "../service/api";
+import { useAuth } from "../context/AuthContext";
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState("overview");
@@ -19,6 +20,7 @@ const AdminDashboard = () => {
   const [supplyRequests, setSupplyRequests] = useState([]);
   const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { user } = useAuth();
 
   const [newClerk, setNewClerk] = useState({ name: "", email: "" });
   const [showAddClerk, setShowAddClerk] = useState(false);
@@ -88,7 +90,11 @@ const AdminDashboard = () => {
   return (
     <div className="bg-[#041524] min-h-screen p-6">
       <div className="max-w-7xl mx-auto space-y-6">
-        <h1 className="text-3xl font-bold text-white">Admin Dashboard</h1>
+        <div className="text-center mb-6">
+          <h1 className="text-3xl font-bold text-white mb-2">Admin Dashboard</h1>
+          <h1 className="text-3l font-bold text-white mb-2" > Welcome {user?.email}</h1>
+          <p className="text-gray-400">Manage clerks and supply requests</p>
+        </div>
 
         {/* KPI Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

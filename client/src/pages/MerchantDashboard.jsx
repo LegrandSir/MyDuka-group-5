@@ -156,7 +156,10 @@ const MerchantDashboard = () => {
   return (
     <div className="bg-[#041524] min-h-screen p-6">
       <div className="max-w-7xl mx-auto space-y-6">
-        <h1 className="text-3xl font-bold text-white">Merchant Dashboard</h1>
+        <div className="text-center mb-6">
+          <h1 className="text-3xl font-bold text-white mb-2">Merchant Dashboard</h1>
+          <p className="text-gray-400">Manage stores and view perfomance</p>
+        </div>
 
         {/* KPI Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
