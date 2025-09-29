@@ -18,19 +18,27 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem("token");
   };
 
-  // 👇 Rehydrate user from token on refresh
   useEffect(() => {
-    if (token && !user) {
-      try {
-        const decoded = JSON.parse(atob(token.split(".")[1]));
-        console.log("Decoded token:", decoded);
-        setUser(decoded);
-      } catch (err) {
-        console.error("Invalid token", err);
-        logout();
-      }
+  if (token && !user) {
+    try {
+      const decoded = JSON.parse(atob(token.split(".")[1]));
+      console.log("Decoded token:", decoded);
+
+
+      const normalizedUser = {
+        id: decoded.sub?.user_id,
+        role: decoded.sub?.role,
+        ...decoded
+      };
+
+      setUser(normalizedUser);
+    } catch (err) {
+      console.error("Token invalid", err);
+      logout();
     }
-  }, [token]);
+  }
+}, [token]);
+
 
   return (
     <AuthContext.Provider value={{ user, token, login, logout }}>
