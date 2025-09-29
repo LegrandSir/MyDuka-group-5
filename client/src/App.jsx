@@ -1,7 +1,7 @@
 // src/App.jsx
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
-import RoleBasedDashboard from "./components/RoleBasedDashboard";
+import RoleBasedDashboard from "./pages/RoleBasedDashboard";
 import PrivateRoute from "./components/PrivateRoute";
 
 export default function App() {
