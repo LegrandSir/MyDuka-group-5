@@ -11,11 +11,14 @@ import Card from "../components/Card";
 import TabButton from "../components/TabButton";
 import apiService from "../service/api";
 
+import { useAuth } from "../context/AuthContext";
+
 const ClerkDashboard = () => {
   const [activeTab, setActiveTab] = useState("overview");
   const [inventory, setInventory] = useState([]);
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { user } = useAuth();
 
   // Supply request form
   const [newRequest, setNewRequest] = useState({ product_id: "", quantity: "" });
@@ -86,6 +89,8 @@ const ClerkDashboard = () => {
       <div className="max-w-7xl mx-auto space-y-6">
         <div className="text-center mb-6">
           <h1 className="text-3xl font-bold text-white mb-2">Clerk Dashboard</h1>
+
+          <h1 className="text-3l font-bold text-white mb-2" > Welcome {user?.email}</h1>
           <p className="text-gray-400">Manage stock and supply requests</p>
         </div>
 
