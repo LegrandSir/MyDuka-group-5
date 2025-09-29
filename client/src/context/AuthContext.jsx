@@ -23,7 +23,6 @@ export const AuthProvider = ({ children }) => {
     try {
       const decoded = JSON.parse(atob(token.split(".")[1]));
 
-
       const normalizedUser = {
         id: decoded.sub?.user_id,
         role: decoded.sub?.role,
