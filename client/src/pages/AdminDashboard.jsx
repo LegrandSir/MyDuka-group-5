@@ -106,15 +106,6 @@ const AdminDashboard = () => {
           <Card title="Payments" value={payments.length} icon={DollarSign} color="purple" />
         </div>
 
-        <h1 className="text-3xl font-bold text-white">Admin Dashboard</h1>
-
-        {/* KPI Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Card title="Inventory Items" value={inventory.length} icon={Package} color="blue" />
-          <Card title="Supply Requests" value={supplyRequests.length} icon={ClipboardList} color="green" />
-          <Card title="Payments" value={payments.length} icon={DollarSign} color="purple" />
-        </div>
-
         {/* Tabs */}
         <div className="flex gap-2 bg-gray-800/50 p-2 rounded-xl">
           <TabButton id="overview" label="Overview" isActive={activeTab === "overview"} onClick={setActiveTab} icon={ClipboardList} />
