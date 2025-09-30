@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify 
 from models import db, Category, Product
 
 bp = Blueprint("categories", __name__, url_prefix="/categories")
@@ -6,7 +6,7 @@ bp = Blueprint("categories", __name__, url_prefix="/categories")
 # -------------------------
 # CREATE CATEGORY
 # -------------------------
-@bp.route("/", methods=["POST"])
+@bp.route("", methods=["POST"], strict_slashes=False)
 def create_category():
     data = request.get_json()
     name = data.get("name")
@@ -30,9 +30,10 @@ def create_category():
     }), 201
 
 
-# GET ALL CATEGORIES (with products)
-
-@bp.route("/", methods=["GET"])
+# -------------------------
+# GET ALL CATEGORIES
+# -------------------------
+@bp.route("", methods=["GET"], strict_slashes=False)
 def get_categories():
     categories = Category.query.all()
     result = []
@@ -48,14 +49,15 @@ def get_categories():
                     "description": p.description,
                     "price": p.price
                 }
-                for p in c.products  # backref from Product model
+                for p in c.products
             ]
         })
     return jsonify(result)
 
 
+# -------------------------
 # GET SINGLE CATEGORY
-
+# -------------------------
 @bp.route("/<int:category_id>", methods=["GET"])
 def get_category(category_id):
     category = Category.query.get_or_404(category_id)
@@ -75,9 +77,9 @@ def get_category(category_id):
     })
 
 
-
+# -------------------------
 # UPDATE CATEGORY
-
+# -------------------------
 @bp.route("/<int:category_id>", methods=["PUT"])
 def update_category(category_id):
     category = Category.query.get_or_404(category_id)
@@ -104,8 +106,9 @@ def update_category(category_id):
     })
 
 
+# -------------------------
 # DELETE CATEGORY
-
+# -------------------------
 @bp.route("/<int:category_id>", methods=["DELETE"])
 def delete_category(category_id):
     category = Category.query.get_or_404(category_id)

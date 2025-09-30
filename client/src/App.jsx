@@ -11,15 +11,13 @@ export default function App() {
         <Route path="/login" element={<Login />} />
 
         <Route
-      path="/dashboard"
-      element={
+         path="/dashboard"
+         element={
         <PrivateRoute>
           <RoleBasedDashboard />
         </PrivateRoute>
-      }
-    />
-        
-
+        }
+        />
       
         <Route path="*" element={<Login />} />
       </Routes>

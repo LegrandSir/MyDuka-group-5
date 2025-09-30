@@ -1,5 +1,4 @@
-// API Service for Inventory Management System
-// Base configuration
+// 🌐 Base configuration
 const API_BASE_URL = 'http://localhost:5000';
 
 class ApiService {
@@ -63,7 +62,7 @@ class ApiService {
   // =============================
 
   async login(credentials) {
-    return this.request('/login', {
+    return this.request('/auth/login', {   // ✅ fixed endpoint
       method: 'POST',
       body: credentials,
       requireAuth: false,
@@ -77,81 +76,44 @@ class ApiService {
   // 📦 COMMON DATA METHODS 
   // =============================
 
-  async getRoles() {
-    return this.request('/roles');
-  }
+  async getRoles() { return this.request('/roles'); }
+  async getCategories() { return this.request('/categories'); }
+  async createCategory(data) { return this.request('/categories', { method: 'POST', body: data }); }
+  async updateCategory(id, data) { return this.request(`/categories/${id}`, { method: 'PUT', body: data }); }
+  async deleteCategory(id) { return this.request(`/categories/${id}`, { method: 'DELETE' }); }
 
-  async getCategories() {
-    return this.request('/categories');
-  }
+  async getProducts() { return this.request('/products/'); }
+  async createProduct(data) { return this.request('/products', { method: 'POST', body: data }); }
+  async updateProduct(id, data) { return this.request(`/products/${id}`, { method: 'PUT', body: data }); }
+  async deleteProduct(id) { return this.request(`/products/${id}`, { method: 'DELETE' }); }
 
-  async createCategory(categoryData) {
-    return this.request('/categories', {
-      method: 'POST',
-      body: categoryData,
-    });
-  }
-
-  async updateCategory(id, categoryData) {
-    return this.request(`/categories/${id}`, {
-      method: 'PUT',
-      body: categoryData,
-    });
-  }
-
-  async deleteCategory(id) {
-    return this.request(`/categories/${id}`, {
-      method: 'DELETE',
-    });
-  }
-  
-  async getProducts() {
-    return this.request('/products/');
-  }
-
-  async createProduct(productData) {
-    return this.request('/products', {
-      method: 'POST',
-      body: productData,
-    });
-  }
-
-  async updateProduct(id, productData) {
-    return this.request(`/products/${id}`, {
-      method: 'PUT',
-      body: productData,
-    });
-  }
-
-  async deleteProduct(id) {
-    return this.request(`/products/${id}`, {
-      method: 'DELETE',
-    });
-  }
+  // =============================
+  // 📦 INVENTORY
+  // =============================
 
   async getInventory(storeId) {
-    const endpoint = storeId ? `/inventory?store_id=${storeId}` : '/inventory';
+    const endpoint = storeId ? `/inventory/?store_id=${storeId}` : '/inventory/';
     return this.request(endpoint);
   }
 
-  // Endpoint: PUT /inventory/<id> (Updates final quantity)
   async updateInventory(inventoryId, quantity) {
     return this.request(`/inventory/${inventoryId}`, {
       method: 'PUT',
       body: { quantity },
     });
   }
-  
+
+  // =============================
+  // 🚚 SUPPLY REQUESTS
+  // =============================
+
   async getSupplyRequests(storeId) {
     const endpoint = storeId ? `/supply_requests?store_id=${storeId}` : '/supply_requests';
     return this.request(endpoint);
   }
 
-  async createSupplyRequest(requestData) {
-    return this.request('/supply_requests', {
-      method: 'POST',
-      body: requestData,
-    });
+  async createSupplyRequest(data) {
+    return this.request('/supply_requests', { method: 'POST', body: data });
   }
 
   async updateSupplyRequest(id, status) {
@@ -165,21 +127,13 @@ class ApiService {
   // 💸 PAYMENTS 
   // =============================
 
-  async getPayments() {
-    return this.request('/payments');
-  }
-  
-  async createPayment(paymentData) {
-    return this.request('/payments', {
-      method: 'POST',
-      body: paymentData,
-    });
-  }
+  async getPayments() { return this.request('/payments'); }
+  async createPayment(data) { return this.request('/payments', { method: 'POST', body: data }); }
 
   // =============================
   // 👤 USER MANAGEMENT 
   // =============================
-  
+
   async inviteUser(email, roleId, storeId) {
     return this.request('/invite', {
       method: 'POST',
@@ -188,60 +142,32 @@ class ApiService {
   }
 
   async createClerkViaAdmin(clerkData) {
-    return this.request('/users/clerk', {
-      method: 'POST',
-      body: clerkData,
-    });
+    return this.request('/users/clerk', { method: 'POST', body: clerkData });
   }
 
   // =============================
   // 🏪 STORE MANAGEMENT 
   // =============================
 
-  async getStores() {
-    return this.request('/stores');
-  }
-
-  async createStore(storeData) {
-    return this.request('/stores', {
-      method: 'POST',
-      body: storeData,
-    });
-  }
+  async getStores() { return this.request('/stores/'); }
+  async createStore(data) { return this.request('/stores/', { method: 'POST', body: data }); }
 
   // =============================
   // 🐘 DASHBOARD HELPERS 
   // =============================
 
   merchantDashboard = {
-    getStores: async () => {
-      return this.getStores();
-    },
-
-    createStore: async (storeData) => {
-      return this.createStore(storeData);
-    },
-    
-    createStoreAdmin: async (adminData) => {
-      return this.inviteUser(adminData.email, 2, adminData.storeId); // roleId=2 assumed
-    },
-    
-
+    getStores: async () => this.getStores(),
+    createStore: async (data) => this.createStore(data),
+    createStoreAdmin: async (adminData) => this.inviteUser(adminData.email, 2, adminData.storeId),
   };
 
   adminDashboard = {
-
-    createSupplyRequest: async (requestData) => {
-      return this.createSupplyRequest(requestData);
-    },
-    
+    createSupplyRequest: async (data) => this.createSupplyRequest(data),
   };
 
   clerkDashboard = {
-
-    createSupplyRequest: async (requestData) => {
-      return this.createSupplyRequest(requestData);
-    },
+    createSupplyRequest: async (data) => this.createSupplyRequest(data),
   };
 
   // =============================
@@ -273,7 +199,7 @@ class ApiService {
   }
 }
 
-// Create singleton instance
+// Singleton export
 const apiService = new ApiService();
 export default apiService;
 
@@ -301,7 +227,6 @@ export const {
   createPayment,
 } = apiService;
 
-// Explicit exports for dashboard helpers
 export const merchantDashboard = apiService.merchantDashboard;
 export const adminDashboard = apiService.adminDashboard;
 export const clerkDashboard = apiService.clerkDashboard;
