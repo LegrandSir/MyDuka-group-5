@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-  if (token && !user) {
+  if (token) {
     try {
       const decoded = JSON.parse(atob(token.split(".")[1]));
 
@@ -30,6 +30,7 @@ export const AuthProvider = ({ children }) => {
       };
 
       setUser(normalizedUser);
+      console.log("User after login:", normalizedUser);
     } catch (err) {
       console.error("Token invalid", err);
       logout();

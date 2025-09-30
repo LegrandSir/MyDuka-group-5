@@ -26,7 +26,7 @@ export default function DashboardLayout({ children }) {
           {/* User email */}
           <div className="text-right">
             <p className="text-white font-medium">{user?.email || "User"}</p>
-            <p className="text-gray-400 text-sm">ID: {user?.id}</p>
+            {/* <p className="text-gray-400 text-sm">ID: {user?.name}</p> */}
           </div>
 
           {/* Role badge */}
