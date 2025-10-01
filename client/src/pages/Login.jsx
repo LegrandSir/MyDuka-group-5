@@ -1,7 +1,8 @@
 // src/pages/Login.jsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { login } from "../services/api";
+import { useAuth } from "../context/AuthContext";
+import { loginAPI } from "../services/api";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -9,6 +10,7 @@ export default function Login() {
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -16,24 +18,20 @@ export default function Login() {
     setError("");
 
     try {
-      const data = await login(email, password);
+      const data = await loginAPI(email, password);
 
       if (data.access_token) {
-        // Save token + user info
-        localStorage.setItem("token", data.access_token);
-        localStorage.setItem("user", JSON.stringify(data.user));
-
-        // Redirect to dashboard
-        navigate("/dashboard");
-      } else {
-        setError(data.msg || "Login failed");
-      }
-    } catch {
-      setError("Server error. Please try again.");
-    } finally {
-      setSubmitting(false);
+      login(data.user, data.access_token); // Use context login
+      navigate("/dashboard");
+    } else {
+      setError(data.msg || "Login failed");
     }
-  };
+  } catch {
+    setError("Server error. Please try again.");
+  } finally {
+    setSubmitting(false);
+  }
+};
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-900 px-4">
