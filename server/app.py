@@ -21,7 +21,18 @@ def create_app(config_class=Config):
     app.config.from_object(config_class)
 
     # CORS(app, resources={r"/*": {"origins": "http://127.0.0.1:5173"}})  
-    CORS(app, resources={r"/*": {"origins": "http://127.0.0.1:5173"}}, supports_credentials=True)
+    CORS(app, resources={
+        r"/*":{ 
+            "origins": [
+                "http://127.0.0.1:5173",
+                "http://localhost:5173",
+               
+            ],
+            "supports_credentials": True,
+            "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+            "allow_headers": ["Content-Type", "Authorization"]
+        }
+    })
 
 
     # Extensions
