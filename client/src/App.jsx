@@ -1,5 +1,5 @@
 // src/App.jsx
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, BrowserRouter } from "react-router-dom";
 import Login from "./pages/Login";
 import RoleBasedDashboard from "./components/RoleBasedDashboard";
 import PrivateRoute from "./components/PrivateRoute";

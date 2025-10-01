@@ -1,15 +1,13 @@
-const TabButton = ({ id, label, isActive, onClick, icon: Icon }) => (
+import React from "react";
+
+export default function TabButton({ id, label, isActive, onClick, icon: Icon }) {
+  return (
     <button
       onClick={() => onClick(id)}
-      className={`px-4 py-2 rounded-lg transition-all flex items-center gap-2 ${
-        isActive 
-          ? 'bg-blue-600 text-white shadow-lg' 
-          : 'text-gray-400 hover:text-white hover:bg-gray-800'
-      }`}
+      className={`flex items-center gap-2 px-4 py-2 rounded ${isActive ? "bg-gray-700 text-white" : "text-gray-300 hover:bg-gray-800"}`}
     >
-      <Icon className="w-4 h-4" />
-      {label}
+      {Icon && <Icon className="w-4 h-4" />}
+      <span>{label}</span>
     </button>
   );
-
-export default TabButton;
+}

@@ -30,7 +30,6 @@ export const AuthProvider = ({ children }) => {
       };
 
       setUser(normalizedUser);
-      console.log("User after login:", normalizedUser);
     } catch (err) {
       console.error("Token invalid", err);
       logout();
