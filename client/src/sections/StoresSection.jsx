@@ -1,7 +1,7 @@
 import { useState } from "react";
 import StoresTable from "../components/table/StoresTable";
 
-export default function StoresSection({ stores, onAdd, onUpdate, onDelete }) {
+export default function StoresSection({ stores, products, payments, onAdd, onUpdate, onDelete }) {
   const [newStore, setNewStore] = useState({ name: "", location: "" });
 
   const handleAdd = () => {
@@ -39,8 +39,14 @@ export default function StoresSection({ stores, onAdd, onUpdate, onDelete }) {
         </button>
       </div>
 
-      {/* Stores List */}
-      <StoresTable stores={stores} onUpdate={onUpdate} onDelete={onDelete} />
+      {/* Stores List with drilldown */}
+      <StoresTable
+        stores={stores}
+        products={products}
+        payments={payments}
+        onUpdate={onUpdate}
+        onDelete={onDelete}
+      />
     </div>
   );
 }
