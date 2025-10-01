@@ -20,27 +20,27 @@ async function request(path, opts = {}) {
 
 const api = {
   // Products
-  getProducts: () => request("/products"),
+  getProducts: () => request("/products/"),
   getProduct: (id) => request(`/products/${id}`),
-  createProduct: (data) => request("/products", { method: "POST", body: JSON.stringify(data) }),
+  createProduct: (data) => request("/products/", { method: "POST", body: JSON.stringify(data) }),
   updateProduct: (id, data) => request(`/products/${id}`, { method: "PUT", body: JSON.stringify(data) }),
   deleteProduct: (id) => request(`/products/${id}`, { method: "DELETE" }),
 
   // Categories
-  getCategories: () => request("/categories"),
-  createCategory: (data) => request("/categories", { method: "POST", body: JSON.stringify(data) }),
+  getCategories: () => request("/categories/"),
+  createCategory: (data) => request("/categories/", { method: "POST", body: JSON.stringify(data) }),
   updateCategory: (id, data) => request(`/categories/${id}`, { method: "PUT", body: JSON.stringify(data) }),
   deleteCategory: (id) => request(`/categories/${id}`, { method: "DELETE" }),
 
   // Inventory
-  getInventory: () => request("/inventory"),
-  createInventory: (data) => request("/inventory", { method: "POST", body: JSON.stringify(data) }),
+  getInventory: () => request("/inventory/"),
+  createInventory: (data) => request("/inventory/", { method: "POST", body: JSON.stringify(data) }),
   updateInventory: (id, quantity) => request(`/inventory/${id}`, { method: "PUT", body: JSON.stringify({ quantity }) }),
   deleteInventory: (id) => request(`/inventory/${id}`, { method: "DELETE" }),
 
   // Supply requests
-  getSupplyRequests: () => request("/supply-requests"),
-  createSupplyRequest: (data) => request("/supply-requests", { method: "POST", body: JSON.stringify(data) }),
+  getSupplyRequests: () => request("/supply_requests/"),
+  createSupplyRequest: (data) => request("/supply_requests/", { method: "POST", body: JSON.stringify(data) }),
 
   // any other endpoints ...
 };
