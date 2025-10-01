@@ -1,4 +1,3 @@
-// src/components/tables/ClerkTable.jsx
 import React from "react";
 
 export default function ClerkTable({ clerks, onToggleStatus }) {

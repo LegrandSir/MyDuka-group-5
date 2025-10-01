@@ -66,7 +66,7 @@ export default function AdminDashboard() {
             />
           )}
           {activeTab === "payments" && (
-            <PaymentsSection payments={payments} onAdd={addPayment} />
+            <PaymentsSection payments={payments} onAdd={addPayment} showStore={false} />
           )}
           {activeTab === "clerks" && (
             <ClerksSection clerks={clerks} onAdd={addClerk} onToggleStatus={toggleClerkStatus} />

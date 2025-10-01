@@ -56,6 +56,14 @@ const api = {
   getPayments: () => request("/payments/"),
   createPayment: (data) => request("/payments/", { method: "POST", body: JSON.stringify(data) }),
 
+  // Stores
+  getStores: () => request("/stores/"),
+  getStore: (id) => request(`/stores/${id}`),
+  createStore: (data) => request("/stores/", { method: "POST", body: JSON.stringify(data) }),
+  updateStore: (id, data) => request(`/stores/${id}`, { method: "PUT", body: JSON.stringify(data) }),
+  deleteStore: (id) => request(`/stores/${id}`, { method: "DELETE" }),
+
+
   // Clerks
   createClerkViaAdmin: (data) => request("/clerks", { method: "POST", body: JSON.stringify(data) }),
 };
@@ -64,6 +72,15 @@ const api = {
 export const adminDashboard = {
   toggleClerkStatus: (id, active) =>
     request(`/clerks/${id}/status`, { method: "PUT", body: JSON.stringify({ active }) }),
+};
+
+// Merchant-specific helpers
+export const merchantDashboard = {
+  createStoreAdmin: (data) =>
+    request("/admins", { method: "POST", body: JSON.stringify(data) }),
+  toggleAdminStatus: (id, active) =>
+    request(`/admins/${id}/status`, { method: "PUT", body: JSON.stringify({ active }) }),
+  // getAdmins: () => request("/admins"), // enable when backend supports
 };
 
 export default api;
