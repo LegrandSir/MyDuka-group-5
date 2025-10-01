@@ -1,5 +1,5 @@
 // 🌐 Base configuration
-const API_BASE_URL = 'http://localhost:5000';
+const API_BASE_URL = 'http://127.0.0.1:5000';
 
 class ApiService {
   constructor() {
@@ -103,12 +103,20 @@ class ApiService {
     });
   }
 
+  async createInventory(data) {
+    return this.request('/inventory', { method: 'POST', body: data });
+  }
+
+  async deleteInventory(id) {
+    return this.request(`/inventory/${id}`, { method: 'DELETE' });
+    }
+
   // =============================
   // 🚚 SUPPLY REQUESTS
   // =============================
 
   async getSupplyRequests(storeId) {
-    const endpoint = storeId ? `/supply_requests?store_id=${storeId}` : '/supply_requests';
+    const endpoint = storeId ? `/supply_requests?store_id=${storeId}` : '/supply_requests/';
     return this.request(endpoint);
   }
 
@@ -127,8 +135,8 @@ class ApiService {
   // 💸 PAYMENTS 
   // =============================
 
-  async getPayments() { return this.request('/payments'); }
-  async createPayment(data) { return this.request('/payments', { method: 'POST', body: data }); }
+  async getPayments() { return this.request('/payments/'); }
+  async createPayment(data) { return this.request('/payments/', { method: 'POST', body: data }); }
 
   // =============================
   // 👤 USER MANAGEMENT 
@@ -149,21 +157,74 @@ class ApiService {
   // 🏪 STORE MANAGEMENT 
   // =============================
 
-  async getStores() { return this.request('/stores/'); }
-  async createStore(data) { return this.request('/stores/', { method: 'POST', body: data }); }
+  async getStores() { 
+  return this.request('/stores/'); 
+}
+
+  async createStore(data) { 
+    return this.request('/stores/', { method: 'POST', body: data }); 
+  }
+
+  async updateStore(id, data) {
+    return this.request(`/stores/${id}`, { method: 'PUT', body: data });
+  }
+
+  async deleteStore(id) {
+    return this.request(`/stores/${id}`, { method: 'DELETE' });
+  }
 
   // =============================
   // 🐘 DASHBOARD HELPERS 
   // =============================
 
-  merchantDashboard = {
-    getStores: async () => this.getStores(),
-    createStore: async (data) => this.createStore(data),
-    createStoreAdmin: async (adminData) => this.inviteUser(adminData.email, 2, adminData.storeId),
-  };
+merchantDashboard = {
+  getStores: async () => this.getStores(),
+  createStore: async (data) => this.createStore(data),
+  updateStore: async (id, data) => this.updateStore(id, data),
+  deleteStore: async (id) => this.deleteStore(id),
+  getPayments: async () => this.getPayments(),
 
-  adminDashboard = {
-    createSupplyRequest: async (data) => this.createSupplyRequest(data),
+//   getAdmins: async () => this.getAdmins(),
+//   createStoreAdmin: async (adminData) => 
+//   this.inviteUser(adminData.email, 2, adminData.storeId),
+//   toggleAdminStatus: async (id, active) => this.updateAdminStatus(id, active)
+// };
+
+// async getAdmins() {
+//   return this.request('/admins/'); // <-- adjust to your backend endpoint
+// }
+
+// async updateAdminStatus(id, active) {
+//   return this.request(`/admins/${id}`, {
+//     method: 'PATCH',
+//     body: { active },
+//   });
+}
+
+adminDashboard = {
+  getSupplyRequests: async (storeId) => this.getSupplyRequests(storeId),
+
+  updateSupplyRequest: async (id, status) => this.updateSupplyRequest(id, status),
+
+  deleteSupplyRequest: async (id) =>
+    this.request(`/supply_requests/${id}`, { method: "DELETE" }),
+
+//   getClerks: async () => this.getClerks(),
+//   createClerkViaAdmin : async (clerkData) => 
+//   this.inviteUser(clerkData.email, 2, clerkData.storeId),
+//   toggleClerkStatus: async (id, active) => this.updateClerkStatus(id, active)
+// };
+
+// async getClerks() {
+//   return this.request('/clerks/'); // <-- adjust to your backend endpoint
+// }
+
+// async updateClerkStatus(id, active) {
+//   return this.request(`/clerks/${id}`, {
+//     method: 'PATCH',
+//     body: { active },
+//   });
+
   };
 
   clerkDashboard = {

@@ -1,171 +1,112 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Users, Package, Store, ListTree, BarChart3, Plus, Save, Edit, Trash2, UserPlus, AlertTriangle 
+import {
+  Users, Package, Store, DollarSign, BarChart3, Plus, Edit, Trash2, UserPlus
 } from 'lucide-react';
-import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip } from 'recharts';
+import {
+  ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend
+} from 'recharts';
 import Card from "../components/Card";
 import TabButton from "../components/TabButton";
 import apiService, { merchantDashboard } from "../service/api";
 
-const COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6'];
+const COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444'];
 
 const MerchantDashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
   const [stores, setStores] = useState([]);
   const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [admins, setAdmins] = useState([]); // ⚠️ No GET /admins
+  const [payments, setPayments] = useState([]);
+  const [admins, setAdmins] = useState([]); // ⚠️ still no GET /admins
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [selectedStore, setSelectedStore] = useState(null);
 
   // Forms
   const [newStore, setNewStore] = useState({ name: '', location: '' });
-  const [newProduct, setNewProduct] = useState({ name: '', category_id: '', price: '', description: '' });
-  const [newCategory, setNewCategory] = useState({ name: '', description: '' });
   const [newAdmin, setNewAdmin] = useState({ email: '', storeId: '' });
+  const [editingStore, setEditingStore] = useState(null);
+  const [editStoreData, setEditStoreData] = useState({ name: '', location: '' });
 
-  const [showAddStore, setShowAddStore] = useState(false);
-  const [showAddProduct, setShowAddProduct] = useState(false);
-  const [showAddCategory, setShowAddCategory] = useState(false);
-  const [showAddAdmin, setShowAddAdmin] = useState(false);
-
-  const [editingProduct, setEditingProduct] = useState(null);
-  const [editingCategory, setEditingCategory] = useState(null);
-
-  useEffect(() => {
-    fetchDashboardData();
-  }, []);
+  useEffect(() => { fetchDashboardData(); }, []);
 
   const fetchDashboardData = async () => {
+    setLoading(true);
     try {
-      setLoading(true);
-      const storesData = await apiService.getStores();
-      const productsData = await apiService.getProducts();
-      const categoriesData = await apiService.getCategories();
-
+      const [storesData, productsData, paymentsData, adminsData] = await Promise.all([
+        apiService.getStores(),
+        apiService.getProducts(),
+        apiService.getPayments(),
+        // merchantDashboard.getAdmins()
+      ]);
       setStores(storesData || []);
       setProducts(productsData || []);
-      setCategories(categoriesData || []);
-      setAdmins([]); // ⚠️ No GET /admins
-    } catch (err) {
-      setError(err.message);
+      setPayments(paymentsData || []);
+      // setAdmins(adminsData || []); 
     } finally {
       setLoading(false);
     }
   };
 
-  // Store
+  // CRUD helpers
   const addStore = async () => {
-    try {
-      await apiService.createStore(newStore);
-      await fetchDashboardData();
-      setNewStore({ name: '', location: '' });
-      setShowAddStore(false);
-    } catch (err) {
-      alert('Error creating store: ' + err.message);
-    }
+    await apiService.createStore(newStore);
+    await fetchDashboardData();
+    setNewStore({ name: '', location: '' });
   };
 
-  // Product CRUD
-  const addProduct = async () => {
-    try {
-      await apiService.createProduct(newProduct);
-      await fetchDashboardData();
-      setNewProduct({ name: '', category_id: '', price: '', description: '' });
-      setShowAddProduct(false);
-    } catch (err) {
-      alert('Error creating product: ' + err.message);
-    }
-  };
+  const deleteStore = async (id) => {
+  if (window.confirm("Are you sure you want to delete this store?")) {
+    await apiService.deleteStore(id);
+    await fetchDashboardData();
+  }
+};
 
-  const updateProduct = async () => {
-    try {
-      await apiService.updateProduct(editingProduct.id, editingProduct);
-      await fetchDashboardData();
-      setEditingProduct(null);
-    } catch (err) {
-      alert('Error updating product: ' + err.message);
-    }
-  };
+  const startEditing = (store) => {
+    setEditingStore(store.id);
+    setEditStoreData({ name: store.name, location: store.location });
+};
 
-  const deleteProduct = async (id) => {
-    try {
-      await apiService.deleteProduct(id);
-      await fetchDashboardData();
-    } catch (err) {
-      alert('Error deleting product: ' + err.message);
-    }
-  };
+  const saveEdit = async () => {
+    await apiService.updateStore(editingStore, editStoreData);
+    setEditingStore(null);
+    setEditStoreData({ name: '', location: '' });
+    await fetchDashboardData();
+};
 
-  // Category CRUD
-  const addCategory = async () => {
-    try {
-      await apiService.createCategory(newCategory);
-      await fetchDashboardData();
-      setNewCategory({ name: '', description: '' });
-      setShowAddCategory(false);
-    } catch (err) {
-      alert('Error creating category: ' + err.message);
-    }
-  };
+  const cancelEdit = () => {
+    setEditingStore(null);
+    setEditStoreData({ name: '', location: '' });
+};
 
-  const updateCategory = async () => {
-    try {
-      await apiService.updateCategory(editingCategory.id, editingCategory);
-      await fetchDashboardData();
-      setEditingCategory(null);
-    } catch (err) {
-      alert('Error updating category: ' + err.message);
-    }
-  };
 
-  const deleteCategory = async (id) => {
-    try {
-      await apiService.deleteCategory(id);
-      await fetchDashboardData();
-    } catch (err) {
-      alert('Error deleting category: ' + err.message);
-    }
-  };
-
-  // Admin
   const addAdmin = async () => {
-    try {
-      await merchantDashboard.createStoreAdmin(newAdmin);
-      alert('Invitation sent to ' + newAdmin.email);
-      setNewAdmin({ email: '', storeId: '' });
-      setShowAddAdmin(false);
-    } catch (err) {
-      alert('Error inviting admin: ' + err.message);
-    }
+    await merchantDashboard.createStoreAdmin(newAdmin);
+    alert("Invitation sent!");
+    setNewAdmin({ email: '', storeId: '' });
   };
 
-  // Mock data for reports
-  const weeklyData = [
-    { name: 'Mon', value: 12000 },
-    { name: 'Tue', value: 15000 },
-    { name: 'Wed', value: 18000 },
-    { name: 'Thu', value: 16000 },
-    { name: 'Fri', value: 22000 },
-    { name: 'Sat', value: 25000 },
-    { name: 'Sun', value: 20000 },
-  ];
+  // =============================
+  // REPORTING DATA
+  // =============================
+  const overviewData = stores.map((s) => {
+    const storePayments = payments.filter(p => p.store_id === s.id);
+    const total = storePayments.reduce((sum, p) => sum + Number(p.amount), 0);
+    const paid = storePayments.filter(p => p.status === "paid").reduce((sum, p) => sum + Number(p.amount), 0);
+    const unpaid = total - paid;
+    return { name: s.name, total, paid, unpaid };
+  });
 
   if (loading) return <div className="text-white p-6">Loading...</div>;
 
   return (
     <div className="bg-[#041524] min-h-screen p-6">
       <div className="max-w-7xl mx-auto space-y-6">
-        <div className="text-center mb-6">
-          <h1 className="text-3xl font-bold text-white mb-2">Merchant Dashboard</h1>
-          <p className="text-gray-400">Manage stores and view perfomance</p>
-        </div>
+        <h1 className="text-3xl font-bold text-white text-center">Merchant Dashboard</h1>
 
-        {/* KPI Cards */}
+        {/* KPIs */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <Card title="Total Stores" value={stores.length} icon={Store} color="blue" />
+          <Card title="Stores" value={stores.length} icon={Store} color="blue" />
           <Card title="Products" value={products.length} icon={Package} color="green" />
-          <Card title="Categories" value={categories.length} icon={ListTree} color="purple" />
+          <Card title="Payments" value={payments.length} icon={DollarSign} color="purple" />
           <Card title="Admins" value={admins.length} icon={Users} color="orange" />
         </div>
 
@@ -173,155 +114,305 @@ const MerchantDashboard = () => {
         <div className="flex gap-2 bg-gray-800/50 p-2 rounded-xl">
           <TabButton id="overview" label="Overview" isActive={activeTab === 'overview'} onClick={setActiveTab} icon={BarChart3} />
           <TabButton id="stores" label="Stores" isActive={activeTab === 'stores'} onClick={setActiveTab} icon={Store} />
-          <TabButton id="products" label="Products" isActive={activeTab === 'products'} onClick={setActiveTab} icon={Package} />
-          <TabButton id="categories" label="Categories" isActive={activeTab === 'categories'} onClick={setActiveTab} icon={ListTree} />
-          <TabButton id="admins" label="Admins" isActive={activeTab === 'admins'} onClick={setActiveTab} icon={Users} />
+          <TabButton id="payments" label="Payments" isActive={activeTab === 'payments'} onClick={setActiveTab} icon={DollarSign} />
+          <TabButton id="admins" label="Admins" isActive={activeTab === 'admins'} onClick={setActiveTab} icon={UserPlus} />
         </div>
 
-        <div className="bg-gray-900/50 p-6 rounded-xl">
-          {activeTab === 'overview' && (
-            <div>
-              <h2 className="text-xl text-white mb-4">Performance Overview</h2>
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={weeklyData}>
-                  <XAxis dataKey="name" stroke="#ccc" />
-                  <YAxis stroke="#ccc" />
-                  <Tooltip />
-                  <Bar dataKey="value" fill={COLORS[0]} />
-                </BarChart>
-              </ResponsiveContainer>
-              <div className="mt-4 bg-yellow-900/30 p-4 rounded text-yellow-200 flex items-center gap-2">
-                <AlertTriangle className="w-5 h-5" /> Reports not yet available from backend.
-              </div>
-            </div>
-          )}
+        {/* Overview with store-by-store chart */}
+        {activeTab === 'overview' && (
+          <div>
+            <h2 className="text-xl text-white mb-4">Store Reports</h2>
+            <ResponsiveContainer width="100%" height={350}>
+              <BarChart data={overviewData}>
+                <XAxis dataKey="name" stroke="#ccc" />
+                <YAxis stroke="#ccc" />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="paid" fill={COLORS[1]} stackId="a" />
+                <Bar dataKey="unpaid" fill={COLORS[3]} stackId="a" />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        )}
 
-          {/* Stores */}
-          {activeTab === 'stores' && (
-            <div>
-              <h2 className="text-xl text-white mb-4">Stores</h2>
-              {stores.map(s => (
-                <div key={s.id} className="text-gray-300 border-b border-gray-700 py-2 flex justify-between">
-                  <span>{s.name} - {s.location}</span>
-                  <span className="text-yellow-400 text-sm">Update/Delete missing</span>
-                </div>
+      {/* Stores with drilldown */}
+     {activeTab === 'stores' && (
+      <div>
+       {!selectedStore ? (
+        <>
+          <h2 className="text-xl text-white mb-4">Stores</h2>
+          {/* Add Store Form */}
+          <div className="mb-6 bg-gray-800 p-4 rounded-xl">
+           <h4 className="text-white mb-2">Add New Store</h4>
+            <input
+              type="text"
+              placeholder="Store Name"
+              className="p-2 rounded bg-gray-700 text-white mr-2"
+              value={newStore.name}
+              onChange={(e) => setNewStore({ ...newStore, name: e.target.value })}
+            />
+            <input
+              type="text"
+              placeholder="Location"
+              className="p-2 rounded bg-gray-700 text-white mr-2"
+              value={newStore.location}
+              onChange={(e) => setNewStore({ ...newStore, location: e.target.value })}
+            />
+            <button
+              onClick={addStore}
+              className="bg-blue-600 px-3 py-1 rounded text-white"
+            >
+              Add Store
+            </button>
+          </div>
+          {stores.map(s => (
+            <div
+              key={s.id}
+              className="flex justify-between items-center text-gray-300 border-b border-gray-700 py-2"
+            >
+              {editingStore === s.id ? (
+                <>
+                  <input
+                    type="text"
+                    className="p-1 rounded bg-gray-700 text-white mr-2"
+                    value={editStoreData.name}
+                    onChange={(e) => setEditStoreData({ ...editStoreData, name: e.target.value })}
+                  />
+                  <input
+                    type="text"
+                    className="p-1 rounded bg-gray-700 text-white mr-2"
+                    value={editStoreData.location}
+                    onChange={(e) => setEditStoreData({ ...editStoreData, location: e.target.value })}
+                  />
+                  <button
+                    onClick={saveEdit}
+                    className="bg-green-600 px-2 py-1 rounded text-white mr-2"
+                  >
+                    Save
+                  </button>
+                  <button
+                    onClick={cancelEdit}
+                    className="bg-gray-600 px-2 py-1 rounded text-white"
+                  >
+                    Cancel
+                  </button>
+                </>
+              ) : (
+                <>
+                  <span 
+                    onClick={() => setSelectedStore(s)} 
+                    className="cursor-pointer hover:text-white flex-1"
+                  >
+                    {s.name} – {s.location}
+                  </span>
+                  <div className="flex space-x-2">
+                    <button
+                      onClick={() => startEditing(s)}
+                      className="text-blue-400 hover:text-blue-600"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => deleteStore(s.id)}
+                      className="text-red-400 hover:text-red-600"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+          ))}
+        </>
+       ) : (
+      <div>
+        <button
+          onClick={() => setSelectedStore(null)}
+          className="bg-gray-600 px-3 py-1 rounded text-white mb-4"
+        >
+          ← Back
+        </button>
+
+        {/* Store Info */}
+        <h3 className="text-2xl text-white mb-2">{selectedStore.name} Report</h3>
+        <p className="text-gray-400 mb-6">{selectedStore.location}</p>
+
+        {/* Products */}
+        <h4 className="text-lg text-white mt-4 mb-2">Products</h4>
+        <ul className="ml-4 text-gray-300 space-y-1">
+          {products.filter(p => p.store_id === selectedStore.id).map(p => (
+            <li key={p.id} className="flex justify-between border-b border-gray-700 py-1">
+              <span>{p.name}</span>
+              <span className="text-green-400">Ksh {p.price}</span>
+            </li>
+          ))}
+          {products.filter(p => p.store_id === selectedStore.id).length === 0 && (
+            <li className="text-gray-500 italic">No products available</li>
+          )}
+        </ul>
+
+        {/* Store Payments */}
+        <h4 className="text-lg text-white mt-6 mb-2">Payments</h4>
+            <ul className="ml-4 text-gray-300 space-y-1">
+              {payments.filter(p => p.store_id === selectedStore.id).map(p => (
+                <li key={p.id} className="flex justify-between border-b border-gray-700 py-1">
+                  <span>{p.method} – {p.status}</span>
+                  <span className={p.status === "paid" ? "text-green-400" : "text-red-400"}>
+                    Ksh {p.amount}
+                  </span>
+                </li>
               ))}
-              {showAddStore && (
-                <div className="mt-4">
-                  <input className="bg-gray-700 text-white p-2 rounded mr-2" placeholder="Name" value={newStore.name} onChange={e => setNewStore({ ...newStore, name: e.target.value })} />
-                  <input className="bg-gray-700 text-white p-2 rounded mr-2" placeholder="Location" value={newStore.location} onChange={e => setNewStore({ ...newStore, location: e.target.value })} />
-                  <button onClick={addStore} className="bg-green-600 px-4 py-2 rounded text-white">Add</button>
-                </div>
+              {payments.filter(p => p.store_id === selectedStore.id).length === 0 && (
+                <li className="text-gray-500 italic">No payments recorded for this store</li>
               )}
-              {!showAddStore && (
-                <button onClick={() => setShowAddStore(true)} className="bg-blue-600 px-4 py-2 rounded text-white mt-4 flex items-center gap-2">
-                  <Plus className="w-4 h-4" /> Add Store
-                </button>
-              )}
-            </div>
-          )}
-
-          {/* Products */}
-          {activeTab === 'products' && (
-            <div>
-              <h2 className="text-xl text-white mb-4">Products</h2>
-              <table className="w-full text-gray-300">
-                <thead><tr><th>Name</th><th>Category</th><th>Price</th><th>Actions</th></tr></thead>
-                <tbody>
-                  {products.map(p => (
-                    <tr key={p.id} className="border-t border-gray-700">
-                      <td>{p.name}</td><td>{p.category_id}</td><td>{p.price}</td>
-                      <td>
-                        <button onClick={() => setEditingProduct(p)} className="text-blue-400 mr-2"><Edit className="w-4 h-4" /></button>
-                        <button onClick={() => deleteProduct(p.id)} className="text-red-400"><Trash2 className="w-4 h-4" /></button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              {showAddProduct && (
-                <div className="mt-4">
-                  <input className="bg-gray-700 text-white p-2 rounded mr-2" placeholder="Name" value={newProduct.name} onChange={e => setNewProduct({ ...newProduct, name: e.target.value })} />
-                  <input className="bg-gray-700 text-white p-2 rounded mr-2" placeholder="Category ID" value={newProduct.category_id} onChange={e => setNewProduct({ ...newProduct, category_id: e.target.value })} />
-                  <input className="bg-gray-700 text-white p-2 rounded mr-2" placeholder="Price" value={newProduct.price} onChange={e => setNewProduct({ ...newProduct, price: e.target.value })} />
-                  <button onClick={addProduct} className="bg-green-600 px-4 py-2 rounded text-white">Add</button>
-                </div>
-              )}
-              {!showAddProduct && (
-                <button onClick={() => setShowAddProduct(true)} className="bg-blue-600 px-4 py-2 rounded text-white mt-4 flex items-center gap-2">
-                  <Plus className="w-4 h-4" /> Add Product
-                </button>
-              )}
-              {editingProduct && (
-                <div className="mt-4">
-                  <input className="bg-gray-700 text-white p-2 rounded mr-2" value={editingProduct.name} onChange={e => setEditingProduct({ ...editingProduct, name: e.target.value })} />
-                  <button onClick={updateProduct} className="bg-green-600 px-4 py-2 rounded text-white">Save</button>
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* Categories */}
-          {activeTab === 'categories' && (
-            <div>
-              <h2 className="text-xl text-white mb-4">Categories</h2>
-              <table className="w-full text-gray-300">
-                <thead><tr><th>Name</th><th>Description</th><th>Actions</th></tr></thead>
-                <tbody>
-                  {categories.map(c => (
-                    <tr key={c.id} className="border-t border-gray-700">
-                      <td>{c.name}</td><td>{c.description}</td>
-                      <td>
-                        <button onClick={() => setEditingCategory(c)} className="text-blue-400 mr-2"><Edit className="w-4 h-4" /></button>
-                        <button onClick={() => deleteCategory(c.id)} className="text-red-400"><Trash2 className="w-4 h-4" /></button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              {showAddCategory && (
-                <div className="mt-4">
-                  <input className="bg-gray-700 text-white p-2 rounded mr-2" placeholder="Name" value={newCategory.name} onChange={e => setNewCategory({ ...newCategory, name: e.target.value })} />
-                  <input className="bg-gray-700 text-white p-2 rounded mr-2" placeholder="Description" value={newCategory.description} onChange={e => setNewCategory({ ...newCategory, description: e.target.value })} />
-                  <button onClick={addCategory} className="bg-green-600 px-4 py-2 rounded text-white">Add</button>
-                </div>
-              )}
-              {!showAddCategory && (
-                <button onClick={() => setShowAddCategory(true)} className="bg-blue-600 px-4 py-2 rounded text-white mt-4 flex items-center gap-2">
-                  <Plus className="w-4 h-4" /> Add Category
-                </button>
-              )}
-              {editingCategory && (
-                <div className="mt-4">
-                  <input className="bg-gray-700 text-white p-2 rounded mr-2" value={editingCategory.name} onChange={e => setEditingCategory({ ...editingCategory, name: e.target.value })} />
-                  <button onClick={updateCategory} className="bg-green-600 px-4 py-2 rounded text-white">Save</button>
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* Admins */}
-          {activeTab === 'admins' && (
-            <div>
-              <h2 className="text-xl text-white mb-4">Admins</h2>
-              {showAddAdmin && (
-                <div className="mt-4">
-                  <input className="bg-gray-700 text-white p-2 rounded mr-2" placeholder="Email" value={newAdmin.email} onChange={e => setNewAdmin({ ...newAdmin, email: e.target.value })} />
-                  <input className="bg-gray-700 text-white p-2 rounded mr-2" placeholder="Store ID" value={newAdmin.storeId} onChange={e => setNewAdmin({ ...newAdmin, storeId: e.target.value })} />
-                  <button onClick={addAdmin} className="bg-green-600 px-4 py-2 rounded text-white">Invite</button>
-                </div>
-              )}
-              {!showAddAdmin && (
-                <button onClick={() => setShowAddAdmin(true)} className="bg-blue-600 px-4 py-2 rounded text-white mt-4 flex items-center gap-2">
-                  <UserPlus className="w-4 h-4" /> Invite Admin
-                </button>
-              )}
-              <div className="mt-4 bg-yellow-900/30 p-4 rounded text-yellow-200 flex items-center gap-2">
-                <AlertTriangle className="w-5 h-5" /> Listing/deleting admins not available.
-              </div>
+            </ul>
             </div>
           )}
         </div>
+      )}
+
+      {/* Payments */}
+        {activeTab === 'payments' && (
+          <div className="p-6">
+            <h3 className="text-xl font-bold text-white mb-4">Payments Across All Stores</h3>
+
+            {/* Payments Table */}
+            <div className="overflow-x-auto">
+              <table className="min-w-full bg-gray-800 rounded-xl text-gray-300">
+                <thead>
+                  <tr className="bg-gray-700 text-gray-200">
+                    <th className="p-3 text-left">Store</th>
+                    <th className="p-3 text-left">Method</th>
+                    <th className="p-3 text-left">Status</th>
+                    <th className="p-3 text-right">Amount (Ksh)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {payments.map((p) => {
+                    const store = stores.find(s => s.id === p.store_id);
+                    return (
+                      <tr key={p.id} className="border-b border-gray-700">
+                        <td className="p-3">{store ? store.name : "Unknown"}</td>
+                        <td className="p-3">{p.method}</td>
+                        <td className={`p-3 ${p.status === "paid" ? "text-green-400" : "text-red-400"}`}>
+                          {p.status}
+                        </td>
+                        <td className="p-3 text-right">{p.amount}</td>
+                      </tr>
+                    );
+                  })}
+                  {payments.length === 0 && (
+                    <tr>
+                      <td colSpan="4" className="p-3 text-center text-gray-500 italic">
+                        No payments recorded
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+
+        {/* Global Summary */}
+            <div className="mt-6 p-4 bg-gray-900 rounded-xl border border-gray-700">
+              <h5 className="text-white font-semibold mb-2">Global Payments Summary</h5>
+              {(() => {
+                const total = payments.reduce((sum, p) => sum + Number(p.amount), 0);
+                const paid = payments.filter(p => p.status === "paid").reduce((sum, p) => sum + Number(p.amount), 0);
+                const unpaid = total - paid;
+                return (
+                  <div className="text-gray-300 space-y-1">
+                    <p>Total Payments: <span className="text-blue-400">Ksh {total}</span></p>
+                    <p>Paid: <span className="text-green-400">Ksh {paid}</span></p>
+                    <p>Unpaid: <span className="text-red-400">Ksh {unpaid}</span></p>
+                  </div>
+                );
+              })()}
+            </div>
+          </div>
+        )}
+
+      {/* Admins */}
+      {activeTab === 'admins' && (
+      <div>
+        <h2 className="text-xl text-white mb-4">Manage Admins</h2>
+
+        {/* Add Admin Form */}
+        <div className="mb-6 bg-gray-800 p-4 rounded-xl">
+          <h4 className="text-white mb-2">Invite New Admin</h4>
+          <input
+            type="email"
+            placeholder="Admin Email"
+            className="p-2 rounded bg-gray-700 text-white mr-2"
+            value={newAdmin.email}
+            onChange={(e) => setNewAdmin({ ...newAdmin, email: e.target.value })}
+          />
+          <select
+            className="p-2 rounded bg-gray-700 text-white mr-2"
+            value={newAdmin.storeId}
+            onChange={(e) => setNewAdmin({ ...newAdmin, storeId: e.target.value })}
+          >
+            <option value="">Select Store</option>
+            {stores.map((s) => (
+              <option key={s.id} value={s.id}>{s.name}</option>
+            ))}
+          </select>
+          <button
+            onClick={addAdmin}
+            className="bg-blue-600 px-3 py-1 rounded text-white"
+          >
+            Invite
+          </button>
+        </div>
+
+        { /* Admin List */}
+          <div className="overflow-x-auto">
+            <table className="min-w-full bg-gray-800 rounded-xl text-gray-300">
+              <thead>
+                <tr className="bg-gray-700 text-gray-200">
+                  <th className="p-3 text-left">Email</th>
+                  <th className="p-3 text-left">Store</th>
+                  <th className="p-3 text-left">Status</th>
+                  <th className="p-3 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {admins.map((a) => {
+                  const store = stores.find(s => s.id === a.store_id);
+                  return (
+                    <tr key={a.id} className="border-b border-gray-700">
+                      <td className="p-3">{a.email}</td>
+                      <td className="p-3">{store ? store.name : "Unassigned"}</td>
+                      <td className="p-3">
+                        {a.active 
+                          ? <span className="text-green-400">Active</span> 
+                          : <span className="text-red-400">Inactive</span>}
+                      </td>
+                      <td className="p-3 text-right">
+                        <button
+                          onClick={() => merchantDashboard.toggleAdminStatus(a.id, !a.active)
+                            .then(fetchDashboardData)}
+                          className={`px-2 py-1 rounded ${
+                            a.active ? "bg-red-600" : "bg-green-600"
+                          } text-white`}
+                        >
+                          {a.active ? "Deactivate" : "Activate"}
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
+                {admins.length === 0 && (
+                  <tr>
+                    <td colSpan="4" className="p-3 text-center text-gray-500 italic">
+                      No admins available
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
       </div>
     </div>
   );
