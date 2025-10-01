@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 
 const AuthContext = createContext();
 
@@ -17,6 +17,27 @@ export const AuthProvider = ({ children }) => {
     setToken(null);
     localStorage.removeItem("token");
   };
+
+  useEffect(() => {
+  if (token) {
+    try {
+      const decoded = JSON.parse(atob(token.split(".")[1]));
+
+      const normalizedUser = {
+        id: decoded.sub?.user_id,
+        role: decoded.sub?.role,
+        ...decoded
+      };
+
+      setUser(normalizedUser);
+      console.log("User after login:", normalizedUser);
+    } catch (err) {
+      console.error("Token invalid", err);
+      logout();
+    }
+  }
+}, [token]);
+
 
   return (
     <AuthContext.Provider value={{ user, token, login, logout }}>
