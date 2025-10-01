@@ -13,10 +13,10 @@ export default function RoleBasedDashboard() {
     <DashboardLayout>
       {(() => {
         switch (user.role?.toLowerCase()) {
-          case "admin":
-            return <AdminDashboard />;
-          case "merchant":
-            return <MerchantDashboard />;
+        //   case "admin":
+        //     return <AdminDashboard />;
+        //   case "merchant":
+        //     return <MerchantDashboard />;
           case "clerk":
             return <ClerkDashboard />;
           default:

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Plus } from "lucide-react";
 import Modal from "../components/Modal";
-import InventoryTable from "../components/tables/InventoryTable";
+import InventoryTable from "../components/table/InventoryTable";
 import InventoryForm from "../components/forms/InventoryForm";
 import api from "../service/api";
 

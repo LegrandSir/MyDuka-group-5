@@ -1,37 +1,43 @@
+// src/components/tables/InventoryTable.jsx
 import React from "react";
-import ActionButtons from "../ActionButtons";
+import { Edit2, Trash2 } from "lucide-react";
 
-export default function CategoriesTable({ categories, products, onEdit, onDelete }) {
+export default function InventoryTable({ inventory, products, categories, onEdit, onDelete }) {
   return (
-    <div className="overflow-x-auto">
+    <div>
       <table className="w-full text-gray-300">
-        <thead className="bg-gray-800">
-          <tr>
-            <th className="p-3 text-left">Category Name</th>
-            <th className="p-3 text-left">Description</th>
-            <th className="p-3 text-left">Products Count</th>
-            <th className="p-3 text-left">Created Date</th>
+        <thead>
+          <tr className="bg-gray-800">
+            <th className="p-3 text-left">Product</th>
+            <th className="p-3 text-left">Category</th>
+            <th className="p-3 text-left">Quantity</th>
+            <th className="p-3 text-left">Status</th>
             <th className="p-3 text-left">Actions</th>
           </tr>
         </thead>
         <tbody>
-          {categories.length === 0 && (
-            <tr><td colSpan="5" className="p-8 text-center text-gray-400">No categories found.</td></tr>
+          {inventory.length === 0 && (
+            <tr><td colSpan="5" className="p-8 text-center text-gray-400">No inventory items found</td></tr>
           )}
-          {categories.map(cat => {
-            const productCount = products.filter(p => p.category_id === cat.id).length;
+          {inventory.map(item => {
+            const product = products.find(p => p.id === item.product_id);
+            const category = categories.find(c => c.id === product?.category_id);
+            const isLow = item.quantity < 10;
             return (
-              <tr key={cat.id} className="border-t border-gray-700 hover:bg-gray-800/50">
-                <td className="p-3 font-medium text-white">{cat.name}</td>
-                <td className="p-3 text-gray-400">{cat.description || 'No description'}</td>
+              <tr key={item.id} className="border-t border-gray-700">
+                <td className="p-3">{product?.name || 'Unknown'}</td>
+                <td className="p-3">{category?.name || 'N/A'}</td>
+                <td className="p-3">{item.quantity}</td>
                 <td className="p-3">
-                  <span className="bg-blue-900/50 text-blue-300 px-2 py-1 rounded text-sm">
-                    {productCount} {productCount === 1 ? 'product' : 'products'}
+                  <span className={`px-2 py-1 rounded text-xs ${isLow ? 'bg-red-900/50 text-red-300' : 'bg-green-900/50 text-green-300'}`}>
+                    {isLow ? 'Low Stock' : 'In Stock'}
                   </span>
                 </td>
-                <td className="p-3 text-sm">{cat.created_at ? new Date(cat.created_at).toLocaleDateString() : 'N/A'}</td>
                 <td className="p-3">
-                  <ActionButtons onEdit={() => onEdit(cat)} onDelete={() => onDelete(cat.id)} />
+                  <div className="flex gap-2">
+                    <button onClick={() => onEdit(item)} className="text-blue-400 hover:text-blue-300"><Edit2 className="w-4 h-4"/></button>
+                    <button onClick={() => onDelete(item.id)} className="text-red-400 hover:text-red-300"><Trash2 className="w-4 h-4"/></button>
+                  </div>
                 </td>
               </tr>
             );

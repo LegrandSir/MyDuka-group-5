@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { Plus } from "lucide-react";
 import Modal from "../components/Modal";
-import RequestsTable from "../components/tables/RequestsTable";
+import RequestsTable from "../components/table/RequestsTable";
 import RequestForm from "../components/forms/RequestForm";
 import api from "../service/api";
 

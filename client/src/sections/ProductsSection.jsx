@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Plus } from "lucide-react";
 import Modal from "../components/Modal";
-import ProductsTable from "../components/tables/ProductsTable";
+import ProductsTable from "../components/table/ProductsTable";
 import ProductForm from "../components/forms/ProductForm";
 import api from "../service/api";
 

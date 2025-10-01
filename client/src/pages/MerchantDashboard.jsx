@@ -7,7 +7,7 @@ import {
 } from 'recharts';
 import Card from "../components/Card";
 import TabButton from "../components/TabButton";
-import apiService, { merchantDashboard } from "../service/api";
+// import apiService, { merchantDashboard } from "../service/api";
 
 const COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444'];
 
