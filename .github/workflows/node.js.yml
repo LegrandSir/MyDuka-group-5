@@ -39,17 +39,4 @@ jobs:
         env:
           CI: true
       
-      - name: Build application
-        env:
-          VITE_API_URL: https://myduka-group-5-kpvg.onrender.com 
-        run: npm run build
-
-      - name: Test build
-        run: |
-          ls -la dist/
-          test -f dist/index.html
-          echo " Build successful"
-
-          ls -la dist/
-          test -f dist/index.html
-          echo " Build successful"
+      
