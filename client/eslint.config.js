@@ -6,6 +6,20 @@ import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
   globalIgnores(['dist']),
+
+  // 1. CONFIG FOR NODE.JS FILES (Like jest.config.js)
+  {
+    files: [
+      '**/*.config.js',
+      '**/*.config.mjs',
+      '**/*.cjs',
+    ],
+    languageOptions: {
+      globals: globals.node,
+    },
+  },
+
+  // 2. EXISTING CONFIG FOR REACT/BROWSER FILES (UPDATED FOR JEST)
   {
     files: ['**/*.{js,jsx}'],
     extends: [
@@ -15,7 +29,11 @@ export default defineConfig([
     ],
     languageOptions: {
       ecmaVersion: 2020,
-      globals: globals.browser,
+      // 🚀 MERGE browser AND jest globals to recognize testing environment variables
+      globals: {
+        ...globals.browser,
+        ...globals.jest, // 
+      },
       parserOptions: {
         ecmaVersion: 'latest',
         ecmaFeatures: { jsx: true },
