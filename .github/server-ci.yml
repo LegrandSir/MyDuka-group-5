@@ -1,0 +1,96 @@
+name: server CI
+on:
+  pull_request:
+    branches: [  main ]
+    paths: [ 'server/**' ]
+  push:
+    branches: [ main ]
+    paths: [ 'server/**' ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: server
+    
+    strategy:
+      matrix:
+        python-version: [3.12]
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: 'pip'  
+          cache-dependency-path: server/requirements.txt
+      
+      - name: Lint with flake8
+        run: |
+         pip install flake8  
+         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
+      - name: Test with pytest
+        if: hashFiles('server/tests/**/*.py') != ''
+        env:
+          SECRET_KEY: test-secret-key
+          FLASK_ENV: testing
+          DATABASE_URL: "sqlite:///:memory:"
+        run: |
+         pip install pytest pytest-cov  
+         pytest tests/ -v --maxfail=1 --tb=short --cov=. --cov-report=term-missing
+
+#  ////////
+# 		****
+# 		////////
+# name: Backend CI
+# on:
+#   pull_request:
+#     branches: [ develop, main ]
+#     paths: [ 'server/**' ]
+#   push:
+#     branches: [ develop, main ]
+#     paths: [ 'server/**' ]
+# jobs:
+#   test:
+#     runs-on: ubuntu-latest
+#     defaults:
+#       run:
+#         working-directory: server
+#     strategy:
+#       matrix:
+#         python-version: [3.12]
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v4
+      
+#       - name: Set up Python ${{ matrix.python-version }}
+#         uses: actions/setup-python@v4
+#         with:
+#           python-version: ${{ matrix.python-version }}
+#           cache: 'pip'  # Built-in pip caching
+#           cache-dependency-path: server/requirements.txt
+      
+#       - name: Install dependencies
+#         run: |
+#           python -m pip install --upgrade pip
+#           pip install -r requirements.txt
+      
+#       - name: Lint with flake8
+#         run: |
+#           pip install flake8
+#           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+#           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+      
+#       - name: Test with pytest
+#         env:
+#           SECRET_KEY: test-secret-key
+#           FLASK_ENV: testing
+#         run: |
+#           pip install pytest pytest-cov
+#           pytest tests/ -v
