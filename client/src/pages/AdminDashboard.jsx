@@ -43,9 +43,9 @@ export default function AdminDashboard() {
 
         {/* KPI Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Card title="Inventory Items" value={inventory.length} icon={Package} color="blue" />
-          <Card title="Supply Requests" value={supplyRequests.length} icon={ClipboardList} color="green" />
-          <Card title="Payments" value={payments.length} icon={DollarSign} color="purple" />
+          <Card title="Inventory Items" data-testid="kpi-inventory" value={inventory.length} icon={Package} color="blue" />
+          <Card title="Supply Requests" data-testid="kpi-request" value={supplyRequests.length} icon={ClipboardList} color="green" />
+          <Card title="Payments" data-testid="kpi-payments" value={payments.length} icon={DollarSign} color="purple" />
         </div>
 
         {/* Tabs */}
