@@ -24,7 +24,7 @@ export default function ClerkDashboard() {
 
   const [activeTab, setActiveTab] = useState("overview");
 
-  // helper function passed to sections so they can trigger refetch easily
+
   const refreshAll = async () => {
     await Promise.all([refetchProducts(), refetchCategories(), refetchInventory(), refetchRequests()]);
   };
@@ -36,10 +36,10 @@ export default function ClerkDashboard() {
 
         {/* KPI Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <Card title="Inventory Items" value={inventory.length} icon={Package} color="blue" />
-          <Card title="Categories" value={categories.length} icon={ListTree} color="purple" />
-          <Card title="Requests" value={requests.length} icon={ClipboardList} color="green" />
-          <Card title="Pending Requests" value={requests.filter(r => r.status === "pending").length} icon={AlertTriangle} color="yellow" />
+          <Card title="Inventory Items" data-testid="kpi-inventory" value={inventory.length} icon={Package} color="blue" />
+          <Card title="Categories" data-testid="kpi-category" value={categories.length} icon={ListTree} color="purple" />
+          <Card title="Requests" data-testid="kpi-request" value={requests.length} icon={ClipboardList} color="green" />
+          <Card title="Pending Requests" data-testid="kpi-pending" value={requests.filter(r => r.status === "pending").length} icon={AlertTriangle} color="yellow" />
         </div>
 
         {/* Tabs */}

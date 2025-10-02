@@ -35,17 +35,17 @@ export function useMerchantDashboard() {
 
   // Stores CRUD
   const addStore = async (store) => {
-    await apiService.createStore(store);
+    await api.createStore(store);
     fetchAll();
   };
 
   const updateStore = async (id, data) => {
-    await apiService.updateStore(id, data);
+    await api.updateStore(id, data);
     fetchAll();
   };
 
   const deleteStore = async (id) => {
-    await apiService.deleteStore(id);
+    await api.deleteStore(id);
     fetchAll();
   };
 

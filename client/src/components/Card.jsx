@@ -1,6 +1,4 @@
-import React from "react";
-
-export default function Card({ title, value, icon: Icon, color = "blue" }) {
+export default function Card({ title, value, icon: Icon, color = "blue", ...rest }) {
   
   const gradient = {
     blue: "from-blue-900/20 to-blue-700/10",
@@ -10,7 +8,7 @@ export default function Card({ title, value, icon: Icon, color = "blue" }) {
   }[color] || "from-gray-900/20 to-gray-700/10";
 
   return (
-    <div className={`p-4 rounded-2xl bg-gradient-to-br ${gradient} border border-gray-800`}>
+    <div {...rest} className={`p-4 rounded-2xl bg-gradient-to-br ${gradient} border border-gray-800`}>
       <div className="flex items-center justify-between">
         <div>
           <div className="text-sm text-gray-300">{title}</div>
