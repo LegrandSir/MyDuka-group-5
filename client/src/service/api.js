@@ -1,5 +1,5 @@
-// 🌐 Base configuration
-const BASE_URL = 'http://127.0.0.1:5000';
+//  Base configuration
+const BASE_URL = "https://myduka-group-5-kpvg.onrender.com";
 
 function getToken() {
   return localStorage.getItem("token"); 

@@ -1,6 +1,6 @@
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import logo from "../assets/my duka logo-01.svg"
+import logo from "../assets/mydukalogo-01.svg"
 
 export default function DashboardLayout({ children }) {
   const { user, logout } = useAuth();

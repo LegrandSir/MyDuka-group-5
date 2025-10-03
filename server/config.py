@@ -3,18 +3,24 @@ from datetime import timedelta
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
+
 class Config:
     """
     Default configuration (used for development if no FLASK_ENV specified).
-    Uses Postgres if DATABASE_URI is provided, otherwise falls back to SQLite.
+    Uses Postgres if DATABASE_URL is provided, otherwise falls back to SQLite.
     """
     # Core
     SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret-change-me")
     SQLALCHEMY_DATABASE_URI = os.getenv(
-        "DATABASE_URI",
+        "DATABASE_URL",
         f"sqlite:///{os.path.join(basedir, 'instance', 'myduka.db')}"
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+    # Fix for SQLAlchemy/PostgreSQL protocol
+    if SQLALCHEMY_DATABASE_URI and SQLALCHEMY_DATABASE_URI.startswith("postgres://"):
+        SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_URI.replace("postgres://", "postgresql://", 1)
+
 
     # JWT
     JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "jwt-secret-change-me")
@@ -42,15 +48,14 @@ class DevelopmentConfig(Config):
 class TestingConfig(Config):
     """Testing uses a completely isolated SQLite memory DB."""
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"  # In-memory DB for tests
-    WTF_CSRF_ENABLED = False  # If using Flask-WTF forms
+    SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"
+    WTF_CSRF_ENABLED = False 
 
 
 class ProductionConfig(Config):
     """Production forces Postgres connection."""
     DEBUG = False
     TESTING = False
-    SQLALCHEMY_DATABASE_URI = os.getenv(
-        "DATABASE_URI",
-        "postgresql+psycopg2://postgres:password@localhost:5432/myduka_db"
-    )
+    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL")
+    if SQLALCHEMY_DATABASE_URI and SQLALCHEMY_DATABASE_URI.startswith("postgres://"):
+        SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_URI.replace("postgres://", "postgresql://", 1)

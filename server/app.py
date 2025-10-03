@@ -22,17 +22,18 @@ def create_app(config_class=Config):
 
     # CORS(app, resources={r"/*": {"origins": "http://127.0.0.1:5173"}})  
     CORS(app, resources={
-        r"/*": {
-            "origins": [
-                "http://127.0.0.1:5173",
-                "http://localhost:5173",
-            ],
-            "supports_credentials": True,
-            "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-            "allow_headers": ["Content-Type", "Authorization"]
-        }
-    })
-
+    r"/*": {
+        "origins": [
+            "http://127.0.0.1:5173",
+            "http://localhost:5173",
+            "https://myduka-group-5-1.onrender.com",   # Frontend
+            "https://myduka-group-5-kpvg.onrender.com",
+        ],
+        "supports_credentials": True,
+        "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        "allow_headers": ["Content-Type", "Authorization"]
+    }
+})
 
     # Extensions
     db.init_app(app)
@@ -56,5 +57,5 @@ def create_app(config_class=Config):
 
     return app
 
-if __name__ == "_main_":
+if __name__ == "__main__":
     create_app().run(debug=True)

@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { loginAPI } from "../services/api";
+import logo from "../assets/mydukalogo-01.svg";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -36,11 +37,7 @@ export default function Login() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-900 px-4">
       <div className="w-full max-w-md bg-[#041524] rounded-2xl shadow-2xl p-8 border border-gray-700">
-        <img
-          src="/src/assets/my duka logo-01.svg"
-          alt="Logo"
-          className="mx-auto mb-4 w-20 h-20"
-        />
+        <img src={logo} alt="Logo" className="mx-auto mb-4 w-20 h-20" />
         <h1 className="text-2xl font-bold text-white text-center mb-2">
           MY DUKA
         </h1>
