@@ -1,5 +1,5 @@
 // src/services/api.js
-const API_URL = "http://127.0.0.1:5000";
+const API_URL = "https://myduka-group-5-kpvg.onrender.com";
 
  // Flask backend URL 
 
