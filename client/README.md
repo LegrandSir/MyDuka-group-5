@@ -1,451 +1,446 @@
 # MyDuka - Inventory Management System
 
-![MyDuka Banner]
-(https://via.placeholder.com/1200x300/4A90E2/FFFFFF?text=MyDuka+-+Smart+Inventory+Management)
+![MyDuka Banner](https://via.placeholder.com/1200x300/4A90E2/FFFFFF?text=MyDuka+-+Smart+Inventory+Management)
 
+## 📝 Description
 
+MyDuka is a comprehensive store management and inventory tracking system designed to help merchants, store admins, and clerks manage day-to-day stock operations effectively. The system addresses the challenge of manual stock-taking by providing an affordable, user-friendly solution that simplifies inventory management, ensures accurate data collection, and generates visualized reports for better business insights.
 
-## 📋 Table of Contents
-- [Overview](#overview)
-- [Problem Statement](#problem-statement)
-- [Solution](#solution)
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Project Structure](#project-structure)
-- [Getting Started](#getting-started)
-- [API Documentation](#api-documentation)
-- [Testing](#testing)
-- [Deployment](#deployment)
-- [Contributing](#contributing)
-- [Team](#team)
-- [License](#license)
+### Key Features:
+- **Role-based access control** (Merchant, Admin, Clerk)
+- **Real-time inventory tracking** with automated updates
+- **Supply request management** with approval workflows
+- **Payment tracking** for suppliers and reconciliation
+- **Visual analytics** with weekly, monthly, and annual reports
+- **User management** with invitation-based registration
 
-## 🎯 Overview
-
-MyDuka is a comprehensive store management and inventory tracking system designed to help merchants, store admins, and clerks manage day-to-day stock operations effectively. The system provides accurate data entry, clear reporting with visualizations, and smooth communication channels for approvals, supply requests, and financial reconciliation.
-
-## 🔍 Problem Statement
-
-Record keeping and stock taking are essential for every business entity. These processes help businesses make informed decisions on operations such as procurement, sales, and financial planning. While there are many approaches to stock management, only a few businesses can afford advanced tools such as automated report-generating apps. As a result, many businesses rely on manual or tedious methods, which often compromise accuracy and efficiency.
-
-## 💡 Solution
-
-MyDuka provides an affordable, user-friendly inventory management app that:
-- Simplifies stock taking processes
-- Ensures accurate data collection
-- Generates visualized reports for better business insights
-- Facilitates communication between team members
-- Tracks payments and supplier reconciliation
-
-## ✨ Features
-
-### 🔐 Authentication & User Roles
-- **Merchant (Superuser)**: Initializes registration by sending tokenized email invitations to store admins
-- **Store Admin**: Registers via tokenized link (time-limited validity) and manages clerks
-- **Clerk**: Records daily stock operations and submits supply requests
-- JWT-based authentication for secure access
-
-### 📊 Clerk Dashboard
-Clerks can:
-- Record number of items received
-- Track payment status (paid/unpaid)
-- Monitor current stock levels
-- Log spoiled items (broken, expired, etc.)
-- Record buying and selling prices
-- Submit product supply requests to store admins
-
-### 🎛️ Admin Dashboard
-Admins can:
-- View detailed reports on clerks' entries
-- Approve or decline supply requests
-- Track supplier payments (paid vs unpaid)
-- Update payment statuses
-- Manage clerk accounts (add, deactivate, delete)
-
-### 👔 Merchant Dashboard (Superuser)
-Merchants can:
-- Add or remove store admins
-- View store-by-store performance reports
-- Access visualized graphs and analytics
-- Drill down to individual store and product performance
-- Track paid vs unpaid products across all stores
-
-### 📈 Reports & Visualization
-- Graphical reports (line graphs, bar graphs, pie charts)
-- Weekly, monthly, and annual report levels
-- Interactive data visualization
-- Export capabilities
-
-## 🛠️ Tech Stack
+## 🛠️ Tools Used
 
 ### Frontend
-- **Framework**: React.js
-- **State Management**: Redux Toolkit / Context API
-- **Styling**: Tailwind CSS / CSS Modules
-- **Visualization**: Chart.js / Recharts / D3.js
-- **Testing**: Jest + React Testing Library
-- **Build Tool**: Vite / Create React App
+- **React.js** - UI framework
+- **Redux Toolkit** - State management
+- **React Router** - Navigation and routing
+- **Tailwind CSS** - Styling and responsive design
+- **Chart.js / Recharts** - Data visualization
+- **Lucide React** - Icon library
+- **Axios** - HTTP client
+- **Jest & React Testing Library** - Testing
 
 ### Backend
-- **Framework**: Python (Flask)
-- **Database**: PostgreSQL
-- **Authentication**: JWT (JSON Web Tokens)
-- **ORM**: SQLAlchemy
-- **Testing**: Pytest / Minitest
-- **Email Service**: Flask-Mail
+- **Python 3.9+** - Programming language
+- **Flask** - Web framework
+- **SQLAlchemy** - ORM for database operations
+- **PostgreSQL** - Relational database
+- **Flask-JWT-Extended** - JWT authentication
+- **Flask-Mail** - Email service for invitations
+- **Flask-CORS** - Cross-origin resource sharing
+- **Pytest** - Testing framework
+- **Alembic** - Database migrations
 
 ### DevOps & Tools
-- **Version Control**: Git (Gitflow workflow)
-- **CI/CD**: GitHub Actions
-- **Design**: Figma (wireframes)
-- **API Documentation**: Swagger / Postman
+- **Git & GitHub** - Version control
+- **GitHub Actions** - CI/CD pipeline
+- **Figma** - UI/UX design
+- **Postman** - API testing
+- **Docker** - Containerization (optional)
 
-## 📁 Project Structure
+---
 
-```
-MyDuka-group-5/
-├── client/                    # Frontend React application
-│   ├── public/
-│   ├── src/
-│   │   ├── components/       # Reusable components
-│   │   ├── pages/            # Page components
-│   │   ├── store/            # Redux store configuration
-│   │   ├── services/         # API service functions
-│   │   ├── utils/            # Utility functions
-│   │   ├── assets/           # Images, fonts, etc.
-│   │   ├── App.jsx
-│   │   └── main.jsx
-│   ├── package.json
-│   └── README.md
-│
-├── server/                    # Backend Flask application
-│   ├── app/
-│   │   ├── models/           # Database models
-│   │   ├── routes/           # API routes
-│   │   ├── controllers/      # Business logic
-│   │   ├── middleware/       # Authentication, validation
-│   │   ├── utils/            # Helper functions
-│   │   └── __init__.py
-│   ├── migrations/           # Database migrations
-│   ├── tests/                # Backend tests
-│   ├── config.py
-│   ├── requirements.txt
-│   └── run.py
-│
-├── .github/
-│   └── workflows/            # GitHub Actions CI/CD
-├── docs/                     # Documentation
-├── .gitignore
-└── README.md
-```
-
-## 🚀 Getting Started
+## 🚀 Complete Setup Instructions
 
 ### Prerequisites
 
-Before you begin, ensure you have the following installed:
-- **Node.js** (v16 or higher)
-- **Python** (v3.9 or higher)
-- **PostgreSQL** (v12 or higher)
-- **Git**
+Before you begin, ensure you have the following installed on your system:
 
-### Clone the Repository
+- **Node.js** (v16 or higher) - [Download Here](https://nodejs.org/)
+- **Python** (v3.9 or higher) - [Download Here](https://www.python.org/)
+- **PostgreSQL** (v12 or higher) - [Download Here](https://www.postgresql.org/)
+- **Git** - [Download Here](https://git-scm.com/)
+
+### Step 1: Clone the Repository
 
 ```bash
 git clone https://github.com/your-organization/MyDuka-group-5.git
 cd MyDuka-group-5
 ```
 
-### Backend Setup
+### Step 2: Backend Setup
 
-1. **Navigate to the server directory**:
-   ```bash
-   cd server
-   ```
+#### 2.1 Navigate to the server directory
+```bash
+cd server
+```
 
-2. **Create a virtual environment**:
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   ```
+#### 2.2 Create and activate a virtual environment
 
-3. **Install dependencies**:
-   ```bash
-   pip install -r requirements.txt
-   ```
+**On macOS/Linux:**
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
 
-4. **Set up environment variables**:
-   Create a `.env` file in the server directory:
-   ```env
-   FLASK_APP=run.py
-   FLASK_ENV=development
-   DATABASE_URL=postgresql://username:password@localhost:5432/myduka_db
-   JWT_SECRET_KEY=your-secret-key-here
-   MAIL_SERVER=smtp.gmail.com
-   MAIL_PORT=587
-   MAIL_USERNAME=your-email@gmail.com
-   MAIL_PASSWORD=your-app-password
-   MAIL_USE_TLS=True
-   ```
+**On Windows:**
+```bash
+python -m venv venv
+venv\Scripts\activate
+```
 
-5. **Initialize the database**:
-   ```bash
-   flask db init
-   flask db migrate -m "Initial migration"
-   flask db upgrade
-   ```
+#### 2.3 Install Python dependencies
+```bash
+pip install -r requirements.txt
+```
 
-6. **Seed the database (optional)**:
-   ```bash
-   python seed.py
-   ```
+#### 2.4 Set up PostgreSQL database
 
-7. **Run the backend server**:
-   ```bash
-   flask run
-   ```
-   The API will be available at `http://localhost:5000`
+**Create a new database:**
+```bash
+# Login to PostgreSQL
+psql -U postgres
 
-### Frontend Setup
+# Create database
+CREATE DATABASE myduka_db;
 
-1. **Navigate to the client directory**:
-   ```bash
-   cd ../client
-   ```
+# Create user (optional)
+CREATE USER myduka_user WITH PASSWORD 'your_password';
 
-2. **Install dependencies**:
-   ```bash
-   npm install
-   ```
+# Grant privileges
+GRANT ALL PRIVILEGES ON DATABASE myduka_db TO myduka_user;
 
-3. **Set up environment variables**:
-   Create a `.env` file in the client directory:
-   ```env
-   VITE_API_URL=http://localhost:5000/api
-   VITE_APP_NAME=MyDuka
-   ```
+# Exit
+\q
+```
 
-4. **Run the development server**:
-   ```bash
-   npm run dev
-   ```
-   The application will be available at `http://localhost:5173`
+#### 2.5 Configure environment variables
 
-### Default Credentials (Development)
+Create a `.env` file in the `server` directory:
 
-After seeding the database, you can use these credentials:
+```bash
+touch .env
+```
 
-- **Merchant**:
-  - Email: `merchant@myduka.com`
-  - Password: `merchant123`
+Add the following configuration (update with your credentials):
 
-- **Admin**:
-  - Email: `admin@myduka.com`
-  - Password: `admin123`
+```env
+# Flask Configuration
+FLASK_APP=run.py
+FLASK_ENV=development
+SECRET_KEY=your-super-secret-key-here
 
-- **Clerk**:
-  - Email: `clerk@myduka.com`
-  - Password: `clerk123`
+# Database Configuration
+DATABASE_URL=postgresql://myduka_user:your_password@localhost:5432/myduka_db
 
-## 📚 API Documentation
+# JWT Configuration
+JWT_SECRET_KEY=your-jwt-secret-key-here
+JWT_ACCESS_TOKEN_EXPIRES=3600
 
-### Authentication Endpoints
+# Email Configuration (Gmail example)
+MAIL_SERVER=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USE_TLS=True
+MAIL_USERNAME=your-email@gmail.com
+MAIL_PASSWORD=your-app-password
+MAIL_DEFAULT_SENDER=your-email@gmail.com
 
-| Method | Endpoint | Description | Auth Required |
-|--------|----------|-------------|---------------|
-| POST | `/api/auth/login` | User login | No |
-| POST | `/api/auth/register` | Register via token | No |
-| POST | `/api/auth/refresh` | Refresh JWT token | Yes |
-| POST | `/api/auth/logout` | User logout | Yes |
+# Application Configuration
+APP_URL=http://localhost:5173
+```
 
-### User Management Endpoints
+**Note:** For Gmail, you need to generate an [App Password](https://support.google.com/accounts/answer/185833).
 
-| Method | Endpoint | Description | Auth Required | Role |
-|--------|----------|-------------|---------------|------|
-| GET | `/api/users` | Get all users | Yes | Admin, Merchant |
-| GET | `/api/users/:id` | Get user by ID | Yes | All |
-| POST | `/api/users/invite` | Send invitation | Yes | Merchant, Admin |
-| PUT | `/api/users/:id` | Update user | Yes | Admin, Merchant |
-| DELETE | `/api/users/:id` | Delete user | Yes | Merchant |
+#### 2.6 Initialize the database
 
-### Inventory Endpoints
+```bash
+# Initialize migrations
+flask db init
 
-| Method | Endpoint | Description | Auth Required | Role |
-|--------|----------|-------------|---------------|------|
-| GET | `/api/inventory` | Get all inventory items | Yes | All |
-| GET | `/api/inventory/:id` | Get item by ID | Yes | All |
-| POST | `/api/inventory` | Add new item | Yes | Clerk, Admin |
-| PUT | `/api/inventory/:id` | Update item | Yes | Clerk, Admin |
-| DELETE | `/api/inventory/:id` | Delete item | Yes | Admin, Merchant |
+# Create initial migration
+flask db migrate -m "Initial migration"
 
-### Supply Request Endpoints
+# Apply migrations
+flask db upgrade
+```
 
-| Method | Endpoint | Description | Auth Required | Role |
-|--------|----------|-------------|---------------|------|
-| GET | `/api/supply-requests` | Get all requests | Yes | Admin, Merchant |
-| POST | `/api/supply-requests` | Create request | Yes | Clerk |
-| PUT | `/api/supply-requests/:id` | Update request status | Yes | Admin |
+#### 2.7 Seed the database (optional)
 
-### Reports Endpoints
+```bash
+python seed.py
+```
 
-| Method | Endpoint | Description | Auth Required | Role |
-|--------|----------|-------------|---------------|------|
-| GET | `/api/reports/sales` | Get sales reports | Yes | Admin, Merchant |
-| GET | `/api/reports/inventory` | Get inventory reports | Yes | Admin, Merchant |
-| GET | `/api/reports/payments` | Get payment reports | Yes | Admin, Merchant |
+This creates sample data including:
+- 1 Merchant account
+- 2 Admin accounts
+- 3 Clerk accounts
+- Sample inventory items
+- Sample supply requests
 
-For detailed API documentation, visit `/api/docs` when the server is running.
+#### 2.8 Start the backend server
 
-## 🧪 Testing
+```bash
+flask run
+```
 
-### Frontend Tests
+The API will be available at `http://localhost:5000`
 
+You should see:
+```
+ * Running on http://127.0.0.1:5000
+ * Debug mode: on
+```
+
+### Step 3: Frontend Setup
+
+#### 3.1 Open a new terminal and navigate to the client directory
+
+```bash
+cd client
+```
+
+#### 3.2 Install Node.js dependencies
+
+```bash
+npm install
+```
+
+#### 3.3 Configure environment variables
+
+Create a `.env` file in the `client` directory:
+
+```bash
+touch .env
+```
+
+Add the following configuration:
+
+```env
+VITE_API_URL=http://localhost:5000/api
+VITE_APP_NAME=MyDuka
+```
+
+#### 3.4 Start the development server
+
+```bash
+npm run dev
+```
+
+The application will be available at `http://localhost:5173`
+
+You should see:
+```
+  VITE v4.x.x  ready in xxx ms
+
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: use --host to expose
+```
+
+---
+
+## 🎮 How to Run Your App
+
+### Running in Development Mode
+
+#### Start Backend Server (Terminal 1)
+```bash
+cd server
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+flask run
+```
+
+#### Start Frontend Server (Terminal 2)
+```bash
+cd client
+npm run dev
+```
+
+### Access the Application
+
+1. Open your browser and navigate to `http://localhost:5173`
+2. Use the following default credentials (if you seeded the database):
+
+**Merchant Account:**
+- Email: `merchant@myduka.com`
+- Password: `merchant123`
+
+**Admin Account:**
+- Email: `admin@myduka.com`
+- Password: `admin123`
+
+**Clerk Account:**
+- Email: `clerk@myduka.com`
+- Password: `clerk123`
+
+### Running Tests
+
+#### Frontend Tests
 ```bash
 cd client
 npm test                 # Run all tests
-npm test -- --coverage   # Run tests with coverage
-npm test -- --watch      # Run tests in watch mode
+npm test -- --coverage   # Run with coverage report
+npm test -- --watch      # Run in watch mode
 ```
 
-### Backend Tests
-
+#### Backend Tests
 ```bash
 cd server
+source venv/bin/activate
 pytest                   # Run all tests
-pytest --cov            # Run tests with coverage
-pytest -v               # Run tests in verbose mode
+pytest --cov            # Run with coverage report
+pytest -v               # Verbose mode
 ```
 
-### Test Coverage Goals
-- Frontend: Minimum 80% coverage
-- Backend: Minimum 80% coverage
+### Building for Production
 
-## 🚢 Deployment
-
-### CI/CD Pipeline
-
-This project uses GitHub Actions for continuous integration and deployment. The workflow includes:
-
-1. **Code Quality Checks**
-   - Linting (ESLint for frontend, Flake8 for backend)
-   - Code formatting (Prettier, Black)
-
-2. **Testing**
-   - Unit tests
-   - Integration tests
-   - Test coverage reports
-
-3. **Build**
-   - Frontend production build
-   - Backend Docker image
-
-4. **Deployment**
-   - Automatic deployment to staging on merge to `develop`
-   - Manual deployment to production from `main`
-
-### Manual Deployment
-
-#### Frontend (Vercel/Netlify)
-
+#### Frontend
 ```bash
 cd client
 npm run build
-# Deploy the dist/ folder to your hosting service
 ```
+The production build will be created in the `dist/` directory.
 
-#### Backend (Heroku/Railway)
-
+#### Backend
 ```bash
 cd server
-# Follow your hosting provider's deployment instructions
+# Set environment variables for production
+export FLASK_ENV=production
+flask run
 ```
 
-### Environment Variables
+---
 
-Ensure all production environment variables are properly configured in your hosting platform.
 
-## 🤝 Contributing
+### 1. Login Page
+```
+![Login Page](https://via.placeholder.com/800x500/2C3E50/FFFFFF?text=Login+Page+-+Secure+Authentication)
+*Secure login page with email and password authentication for all user roles*
+```
+---
 
-We follow the **Gitflow workflow** for this project. Please adhere to the following guidelines:
+### 2. Merchant Dashboard
+```
+![Merchant Dashboard](https://via.placeholder.com/800x500/3498DB/FFFFFF?text=Merchant+Dashboard+-+Overview+%26+Analytics)
+*Comprehensive merchant dashboard showing store performance, analytics, and multi-store management with interactive charts and KPIs*
 
-### Branch Naming Convention
+---
+```
 
-- `main` - Production-ready code
-- `develop` - Development branch
-- `feature/feature-name` - New features
-- `bugfix/bug-name` - Bug fixes
-- `hotfix/issue-name` - Critical fixes
+### 3. Admin Dashboard
+![Admin Dashboard](https://via.placeholder.com/800x500/27AE60/FFFFFF?text=Admin+Dashboard+-+Supply+Requests+%26+Payments)
+*Admin interface for managing supply requests, tracking payments, and overseeing clerk activities with approval workflows*
 
-### Workflow
+---
 
-1. **Create a feature branch**:
-   ```bash
-   git checkout develop
-   git pull origin develop
-   git checkout -b feature/your-feature-name
-   ```
+### 4. Clerk Dashboard
+![Clerk Dashboard](https://via.placeholder.com/800x500/E74C3C/FFFFFF?text=Clerk+Dashboard+-+Inventory+Management)
+*Clerk interface for daily stock operations including recording items received, stock levels, spoilage, and creating supply requests*
 
-2. **Make your changes and commit**:
-   ```bash
-   git add .
-   git commit -m "feat: add your feature description"
-   ```
+---
 
-3. **Push to remote**:
-   ```bash
-   git push origin feature/your-feature-name
-   ```
+### 5. Inventory Management
+![Inventory Table](https://via.placeholder.com/800x500/9B59B6/FFFFFF?text=Inventory+Table+-+Real-time+Stock+Tracking)
+*Detailed inventory table with real-time stock levels, pricing information, and payment status tracking*
 
-4. **Create a Pull Request** to `develop` branch
+---
 
-### Commit Message Convention
+### 6. Reports & Analytics
+![Reports Dashboard](https://via.placeholder.com/800x500/F39C12/FFFFFF?text=Analytics+%26+Reports+-+Data+Visualization)
+*Visual reports with interactive charts showing sales trends, inventory levels, and financial performance over weekly, monthly, and annual periods*
 
-Follow conventional commits:
+---
 
-- `feat:` - New feature
-- `fix:` - Bug fix
-- `docs:` - Documentation changes
-- `style:` - Code style changes (formatting)
-- `refactor:` - Code refactoring
-- `test:` - Adding or updating tests
-- `chore:` - Maintenance tasks
+## 👥 Authors
 
-Example: `feat: add user authentication endpoint`
+**MyDuka Development Team - Group 5**
 
-### Code Review Process
-
-- All PRs require at least one approval
-- All tests must pass
-- Code coverage must not decrease
-- Follow the project's coding standards
-
-## 👥 Team
-
-**Full Stack Team - Group 5**
+```
 
 | Name | Role | GitHub | Email |
 |------|------|--------|-------|
-| [Name] | Full Stack Developer | [@username](https://github.com/username) | email@example.com |
-| [Name] | Full Stack Developer | [@username](https://github.com/username) | email@example.com |
-| [Name] | Full Stack Developer | [@username](https://github.com/username) | email@example.com |
-| [Name] | Full Stack Developer | [@username](https://github.com/username) | email@example.com |
+| John Doe | Full Stack Developer | [@johndoe](https://github.com/johndoe) | john.doe@example.com |
+| Jane Smith | Full Stack Developer | [@janesmith](https://github.com/janesmith) | jane.smith@example.com |
+| Michael Brown | Full Stack Developer | [@michaelbrown](https://github.com/michaelbrown) | michael.brown@example.com |
+| Sarah Johnson | Full Stack Developer | [@sarahjohnson](https://github.com/sarahjohnson) | sarah.johnson@example.com |
+```
+---
+
+## 🙏 Acknowledgements
+
+We would like to express our gratitude to:
+
+- **Moringa School** - For providing the learning environment and project guidelines
+- **Our Technical Mentors** - For guidance and code reviews throughout the development process
+- **Open Source Community** - For the amazing libraries and tools that made this project possible
+- **Beta Testers** - For valuable feedback and bug reports
+- **Stack Overflow Community** - For helping us troubleshoot issues during development
+
+### Special Thanks To:
+- React.js and Flask communities for excellent documentation
+- Chart.js team for making data visualization simple
+- Testing Library maintainers for robust testing tools
+
+---
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
 
-## 📞 Support
+### MIT License Summary
 
-For questions or support, please contact:
-- Project Repository: [GitHub Issues](https://github.com/your-organization/MyDuka-group-5/issues)
-- Email: support@myduka.com
+```
+MIT License
 
-## 🙏 Acknowledgments
+Copyright (c) 2025 MyDuka Team
 
-- Moringa School for project guidance
-- All contributors and team members
-- Open source libraries and tools used in this project
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
+
+---
+
+## 📞 Support & Contact
+
+For questions, issues, or contributions:
+
+- **GitHub Issues**: [Report a Bug](https://github.com/your-organization/MyDuka-group-5/issues)
+- **Email**: support@myduka.com
+- **Documentation**: [Wiki](https://github.com/your-organization/MyDuka-group-5/wiki)
+
+---
+
+## 🔄 Version History
+
+- **v1.0.0** (2025-01-15) - Initial release
+  - User authentication and role management
+  - Inventory tracking system
+  - Supply request workflows
+  - Payment management
+  - Reports and analytics
+
+---
+
+## 🚦 Project Status
+
+**Status**: ✅ Active Development
+
+**Current Version**: 1.0.0
+
+**Next Release**: v1.1.0 (Planned features: Mobile app, Advanced analytics, Multi-language support)
 
 ---
 
 **Built with ❤️ by MyDuka Team**
+
+⭐ **Star this repository** if you find it helpful!
