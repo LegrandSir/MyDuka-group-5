@@ -354,10 +354,10 @@ flask run
 
 | Name | Role | GitHub | Email |
 |------|------|--------|-------|
-| John Doe | Full Stack Developer | [@johndoe](https://github.com/johndoe) | john.doe@example.com |
-| Jane Smith | Full Stack Developer | [@janesmith](https://github.com/janesmith) | jane.smith@example.com |
-| Michael Brown | Full Stack Developer | [@michaelbrown](https://github.com/michaelbrown) | michael.brown@example.com |
-| Sarah Johnson | Full Stack Developer | [@sarahjohnson](https://github.com/sarahjohnson) | sarah.johnson@example.com |
+| Faith Wangari | Full Stack Developer | [@johndoe](https://github.com/johndoe) | john.doe@example.com |
+| Levy Mwangi | Full Stack Developer | [@janesmith](https://github.com/janesmith) | jane.smith@example.com |
+| Paul Wafula | Full Stack Developer | [@michaelbrown](https://github.com/michaelbrown) | michael.brown@example.com |
+| Ellis lunayo | Full Stack Developer | [@sarahjohnson](https://github.com/sarahjohnson) | sarah.johnson@example.com |
 ```
 ---
 
