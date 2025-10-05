@@ -354,10 +354,10 @@ flask run
 
 | Name | Role | GitHub | Email |
 |------|------|--------|-------|
-| Faith Wangari | Full Stack Developer | [@johndoe](https://github.com/johndoe) | john.doe@example.com |
-| Levy Mwangi | Full Stack Developer | [@janesmith](https://github.com/janesmith) | jane.smith@example.com |
-| Paul Wafula | Full Stack Developer | [@michaelbrown](https://github.com/michaelbrown) | michael.brown@example.com |
-| Ellis lunayo | Full Stack Developer | [@sarahjohnson](https://github.com/sarahjohnson) | sarah.johnson@example.com |
+| Faith Wangari | Full Stack Developer | [@Faith ](https://github.com/Wangari-69) | |
+| Levy Mwangi | Full Stack Developer | [@Levy ] h(ttps://github.com/Levy-m) |  |
+| Paul Wafula | Full Stack Developer | [@Paul](https://github.com/LegrandSir) |  |
+| Ellis lunayo | Full Stack Developer | [@Ellis](https://github.com/Shikokoti) | ellislunayo@gmai.com|
 ```
 ---
 
@@ -407,16 +407,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
-
----
-
-## 📞 Support & Contact
-
-For questions, issues, or contributions:
-
-- **GitHub Issues**: [Report a Bug](https://github.com/your-organization/MyDuka-group-5/issues)
-- **Email**: support@myduka.com
-- **Documentation**: [Wiki](https://github.com/your-organization/MyDuka-group-5/wiki)
 
 ---
 
