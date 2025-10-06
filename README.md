@@ -222,7 +222,7 @@ VITE_APP_NAME=MyDuka
 npm run dev
 ```
 
-The application will be available at `http://localhost:5173`
+The application will be available at `https://myduka-group-5-1.onrender.com`
 
 You should see:
 ```
@@ -253,7 +253,7 @@ npm run dev
 
 ### Access the Application
 
-1. Open your browser and navigate to `http://localhost:5173`
+1. Open your browser and navigate to `https://myduka-group-5-1.onrender.com`
 2. Use the following default credentials (if you seeded the database):
 
 **Merchant Account:**
